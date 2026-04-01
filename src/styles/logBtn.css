@@ -1,0 +1,33 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+:deep(.el-button--primary) {
+    --el-button-bg-color: transparent;
+    --el-button-border-color: transparent;
+    --el-button-hover-bg-color: rgba(255, 255, 255, 0.1);
+    --el-button-hover-border-color: transparent;
+    padding: 0 30px;
+    font-size: 16px;
+    border-radius: 0;
+    height: 4rem;
+    width: 4rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 2. 修改【弹窗内的登录按钮】 */
+:deep(.el-dialog .el-button--primary) {
+    --el-button-bg-color: #165DFF;
+    --el-button-border-color: #165DFF;
+    --el-button-hover-bg-color: #4080FF;
+    --el-button-hover-border-color: #4080FF;
+    height: 44px;
+    font-size: 16px;
+    border-radius: 6px;
+}
