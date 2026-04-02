@@ -25,7 +25,12 @@
     left: 0;
     z-index: 99;
   }
-  .logo {
-    height: 80px;
+  
+  @media (max-width: 768px) {
+    .sidebar-bar {
+      display: none;
+    }
   }
+
+
 </style>

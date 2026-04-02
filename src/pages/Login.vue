@@ -5,18 +5,17 @@
     <el-dialog
       v-model="dialogVisible"
       title="用户登录"
-      width="400px"
       center
+      append-to-body
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
-      <el-form :model="loginForm" :rules="rules" ref="loginFormRef" label-width="80px">
-        <el-form-item label="用户名" prop="username">
+      <el-form :model="loginForm" :rules="rules" ref="loginFormRef" label-width="0px">
+        <el-form-item placeholder="用户名" prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item placeholder="密码" prop="password">
           <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password />
-        </el-form-item>
-        <el-form-item>
-          <el-checkbox v-model="loginForm.remember">记住我</el-checkbox>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleLogin" :loading="loading" style="width: 100%">登录</el-button>
@@ -27,7 +26,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, defineExpose } from 'vue'
 
 const dialogVisible = ref(false)
 const loading = ref(false)
@@ -66,6 +65,14 @@ const handleLogin = async () => {
     console.error('登录失败:', error)
   }
 }
+
+const openDialog = () => {
+  dialogVisible.value = true
+}
+
+defineExpose({
+  openDialog
+})
 </script>
 
 <style scoped>

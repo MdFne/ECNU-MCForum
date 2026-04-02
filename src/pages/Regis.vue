@@ -5,20 +5,22 @@
     <el-dialog
       v-model="dialogVisible"
       title="用户注册"
-      width="400px"
       center
+      append-to-body
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
-      <el-form :model="loginForm" :rules="rules" ref="loginFormRef" label-width="80px">
-        <el-form-item label="用户名" prop="username">
+      <el-form :model="loginForm" :rules="rules" ref="loginFormRef" label-width="0px">
+        <el-form-item placeholder="用户名" prop="username">
           <el-input v-model="loginForm.username" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
+        <el-form-item placeholder="邮箱" prop="email">
           <el-input v-model="loginForm.email" placeholder="请输入邮箱" />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item placeholder="密码" prop="password">
           <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password />
         </el-form-item>
-        <el-form-item label="确认密码" prop="confirmPassword">
+        <el-form-item placeholder="确认密码" prop="confirmPassword">
           <el-input v-model="loginForm.confirmPassword" type="password" placeholder="请确认密码" show-password />
         </el-form-item>
         <el-form-item>
@@ -30,7 +32,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, defineExpose } from 'vue'
 
 const dialogVisible = ref(false)
 const loading = ref(false)
@@ -84,6 +86,14 @@ const handleLogin = async () => {
     console.error('登录失败:', error)
   }
 }
+
+const openDialog = () => {
+  dialogVisible.value = true
+}
+
+defineExpose({
+  openDialog
+})
 </script>
 
 <style scoped>

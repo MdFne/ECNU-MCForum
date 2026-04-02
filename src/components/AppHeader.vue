@@ -16,68 +16,55 @@
       <div class="avatar">
         <img src="../assets/avatar.webp" alt="avatar" />
       </div>
-      <Login />
-      <Regis />
+      <!-- 桌面端显示的登录注册按钮 -->
+      <div class="auth-buttons">
+        <Login ref="loginRef" />
+        <Regis ref="regisRef" />
+      </div>
+      <!-- 移动端显示的汉堡菜单 -->
+      <div class="mobile-menu">
+        <el-dropdown @command="handleMobileMenu">
+          <button class="menu-toggle">
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+            <span class="menu-line"></span>
+          </button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="login">登录</el-dropdown-item>
+              <el-dropdown-item command="register">注册</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
   import { ref } from 'vue'
-  import router from '../router/index.js'
   import Login from '../pages/Login.vue'
   import Regis from '../pages/Regis.vue'
   
   const activeIndex = ref('/')
+  const loginRef = ref(null)
+  const regisRef = ref(null)
   
   const handleSelect = (key) => {
     activeIndex.value = key
+  }
+  
+  const handleMobileMenu = (command) => {
+    if (command === 'login' && loginRef.value) {
+      loginRef.value.openDialog()
+    } else if (command === 'register' && regisRef.value) {
+      regisRef.value.openDialog()
+    }
   }
 </script>
 
 <style scoped>
 @import '../styles/nav.css';
-  .header {
-    height: 4rem;
-    width: 100%;
-    background-color:#1d1e23;
+@import '../styles/header.css';
 
-    margin-bottom: 16px;
-    padding: 0;
-
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 100;
-
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .logo {
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-left: 16px;
-  }
-  .title {
-    font-size: 1.5rem;
-  }
-  .user {
-    margin-right: 16px;
-    display: flex;
-    align-items: center;
-    gap: 0px;
-  }
-  .avatar {
-    margin-right: 16px;
-    display: flex;
-    align-items: center;
-    height: 4rem;
-  }
-  .avatar img {
-    height: 2.5rem;
-    border-radius: 50%;
-  }
 </style>
