@@ -24,6 +24,7 @@
     top: 5rem;
     left: 0;
     z-index: 99;
+    border-radius: 8px;
   }
   
   @media (max-width: 768px) {

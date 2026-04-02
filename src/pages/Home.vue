@@ -185,11 +185,21 @@ onUnmounted(() => {
 
     flex: 1;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px;
 
     background-color: #F1F1F1;
     box-shadow: var(--el-box-shadow-light);
+    border-radius: 8px;
+  }
+
+  @media(max-width: 768px) {
+    .container {
+
+    }
+    .content {
+      padding: 16px;
+    }
   }
 </style>

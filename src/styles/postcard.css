@@ -72,3 +72,13 @@
   margin-right: 4px;
   font-size: 14px;
 }
+
+@media(max-width: 768px) {
+  .post-card {
+    padding: 0px;
+  }
+
+  .card-content {
+    padding: 12px;
+  }
+}
