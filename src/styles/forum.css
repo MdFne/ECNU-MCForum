@@ -105,7 +105,57 @@
 }
 
 @media(max-width: 768px) {
+  .forum-container {
+    flex-direction: column;
+    height: auto;
+    width: auto;
+    padding: 0px;
+    margin: 0 5% 5% 5%;
+  }
+
+  .channel {
+    padding: 8px;
+    border-radius: 4px 4px 0 0;
+  }
+
+  .channel.active {
+    border-top: 4px solid #007bff;
+    border-left: none;
+    /* transform: translate(0, -5px); */
+    transform: translateX(0px);
+  }
+
   .channels-sidebar {
+    display: flex;
+    flex-direction: column;
     width: 100%;
+    padding: 0;
+    border-radius: 6px 6px 0 0;
+    overflow-y: hidden;
+  }
+
+  .channels-sidebar h2 {
+    margin: 12px 0;
+  }
+
+  .channels-list {
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .channel-info {
+    display: none;
+  }
+
+  .channel-icon {
+    width: 30px;
+    height: 30px;
+    margin: 0;
+  }
+
+  .chat-content {
+    width: 100%;
+    height: 75vh;
+    border-radius: 0 0 4px 4px;
   }
 }

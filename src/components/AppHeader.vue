@@ -1,8 +1,9 @@
 <template>
   <div class="header">
     <div class="logo">
-      <img src="../assets/logo.png" style="height: 3.5rem;" alt="MCForum" />
-      <p class="title">ECNU水杉方块社</p>
+      <img src="../assets/logo.png" style="height: 3.2rem;" alt="MCForum" />
+      <!-- <p class="sub-title">ECNU</p> -->
+      <p class="title">华东师范大学水杉方块社</p>
     </div>
     <div class="nav">
       <el-menu class="el-menu-demo" :default-active="activeIndex" mode="horizontal" @select="handleSelect" router>

@@ -20,12 +20,20 @@
     height: 4rem;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
     margin-left: 16px;
+    width: auto;
 }
 
-.title {
+/* .sub-title {
     font-size: 1.5rem;
+    align-self: center;
+} */
+
+.title {
+    font-size: 1.2rem;
+    align-self: center;
+    width: 16rem;
 }
 
 .user {
@@ -83,17 +91,14 @@
     gap: 8px;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1150px) {
     .title {
-        font-size: 1rem;
-    }
-}
-
-@media (max-width: 900px) {
-    .title {
+        /* font-size: 1rem; */
         display: none;
     }
 }
+
+@media (max-width: 900px) {}
 
 @media (max-width: 768px) {
     .header {

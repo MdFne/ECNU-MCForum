@@ -1,9 +1,10 @@
 .nav {
-    width: 48rem;
+    width: 32rem;
     height: 4rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: -6rem;
 }
 
 :deep(.el-menu) {
@@ -34,9 +35,15 @@
     justify-content: center;
 }
 
+@media (max-width: 1150px) {
+    .nav {
+        margin-left: 6rem;
+    }
+}
+
 @media (max-width: 768px) {
     .nav {
-        width: 60%;
+        width: 70%;
         margin: 0;
         padding: 0;
     }

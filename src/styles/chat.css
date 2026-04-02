@@ -94,3 +94,26 @@
 .chat-input button:hover {
   background-color: #0069d9;
 }
+
+@media(max-width: 768px) {
+  .chat-page {
+    width: 100%;
+  }
+
+  .chat-header {
+    border-radius: 0;
+  }
+
+  .chat-page {
+    height: 75vh;
+  }
+
+  .chat-input {
+    border-radius: 0;
+    padding: 8px 4px;
+  }
+
+  .chat-input button {
+    padding: 8px 12px;
+  }
+}
