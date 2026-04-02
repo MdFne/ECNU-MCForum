@@ -165,7 +165,8 @@ onUnmounted(() => {
   .main {
     align-self: center;
     height: 100%;
-    width: 80%;
+    width: min(80%,900px);
+    margin: 0;
     
     display: flex;
     flex-direction: column;
