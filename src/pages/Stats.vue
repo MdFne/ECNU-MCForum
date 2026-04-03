@@ -5,6 +5,7 @@
         src="../assets/serv2.png" 
         alt="服务器图标" 
         class="server-image"
+        @click="handleServerClick()"
       />
       <h1 class="stats-title">服务器统计</h1>
     </div>
@@ -134,6 +135,16 @@ function setChartRef(el, serverId) {
   }
 }
 
+// debug：点击图标触发查询
+function handleServerClick(serverId) {
+  const getRebuildStats = async() => {
+    const stats = await fetch("/util")
+    console.log('服务器查询结果:', stats)
+  }
+  getRebuildStats()
+}
+
+// 初始化图表
 onMounted(() => {
   initCharts()
   window.addEventListener('resize', handleResize)

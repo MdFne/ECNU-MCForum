@@ -33,7 +33,7 @@
 .title {
     font-size: 1.2rem;
     align-self: center;
-    width: 16rem;
+    width: auto;
 }
 
 .user {
