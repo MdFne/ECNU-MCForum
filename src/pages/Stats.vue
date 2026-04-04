@@ -136,12 +136,33 @@ function setChartRef(el, serverId) {
 }
 
 // debug：点击图标触发查询
-function handleServerClick(serverId) {
+function handleServerClick(serverId = 1) {
   const getRebuildStats = async() => {
-    const stats = await fetch("/util")
-    console.log('服务器查询结果:', stats)
+    try {
+      // 后端 API 地址
+      // const response = await fetch(`http://localhost:3000/api/stats/servers/${serverId}/realtime`);
+      const response = await fetch(`http://localhost:3000/api/stats/servers`);
+      
+      if (!response.ok) {
+        throw new Error('请求失败');
+      }
+      
+      const data = await response.json();
+      console.log('服务器查询结果:', data);
+      
+      // 可以在这里更新前端显示的数据
+      if (data.success) {
+        console.log('服务器状态:', data.data);
+        const rebuildServerData = await fetch(`http://localhost:3000/api/stats/servers/${data.data[serverId - 1]._id}/realtime`);
+        console.log('重建服务器状态:', await rebuildServerData.json());
+        
+        // 更新对应服务器的状态
+      }
+    } catch (error) {
+      console.error('获取服务器状态失败:', error);
+    }
   }
-  getRebuildStats()
+  getRebuildStats();
 }
 
 // 初始化图表
