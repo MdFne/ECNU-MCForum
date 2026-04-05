@@ -33,6 +33,5 @@
         align-items: center;
         justify-content: center;
         font-size: 20px;
-
     }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="logo">
-      <img src="../assets/logo.png" style="height: 2.8rem;" alt="MCForum" />
+      <img src="../assets/logo.png" alt="MCForum" />
       <!-- <p class="sub-title">ECNU</p> -->
       <p class="title">华东师范大学水杉方块社</p>
     </div>
@@ -24,42 +24,74 @@
       </div>
       <!-- 移动端显示的汉堡菜单 -->
       <div class="mobile-menu">
-        <el-dropdown @command="handleMobileMenu">
-          <button class="menu-toggle">
-            <span class="menu-line"></span>
-            <span class="menu-line"></span>
-            <span class="menu-line"></span>
-          </button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="login">登录</el-dropdown-item>
-              <el-dropdown-item command="register">注册</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <button class="menu-toggle" @click="toggleSidebar">
+          <span class="menu-line"></span>
+          <span class="menu-line"></span>
+          <span class="menu-line"></span>
+        </button>
       </div>
     </div>
+    
+    <!-- 移动端侧边栏 -->
+    <div class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
+      <div class="sidebar-header">
+        <h3>菜单</h3>
+        <button class="close-btn" @click="toggleSidebar">×</button>
+      </div>
+      <div class="sidebar-menu">
+        <div class="nav-item" @click="navigateTo('/')" :class="{ active: activeIndex === '/' }">首页</div>
+        <div class="nav-item" @click="navigateTo('/forum')" :class="{ active: activeIndex === '/forum' }">论坛</div>
+        <div class="nav-item" @click="navigateTo('/stats')" :class="{ active: activeIndex === '/stats' }">统计</div>
+        <div class="nav-item" @click="navigateTo('/profile')" :class="{ active: activeIndex === '/profile' }">个人中心</div>
+      </div>
+      <div class="sidebar-auth">
+        <button class="auth-btn login-btn" @click="openLogin">登录</button>
+        <button class="auth-btn register-btn" @click="openRegister">注册</button>
+      </div>
+    </div>
+    
+    <!-- 遮罩层 -->
+    <div class="overlay" v-if="sidebarOpen" @click="toggleSidebar"></div>
   </div>
 </template>
 
 <script setup>
   import { ref } from 'vue'
+  import { useRouter } from 'vue-router'
   import Login from '../pages/Login.vue'
   import Regis from '../pages/Regis.vue'
   
+  const router = useRouter()
   const activeIndex = ref('/')
   const loginRef = ref(null)
   const regisRef = ref(null)
+  const sidebarOpen = ref(false)
   
   const handleSelect = (key) => {
     activeIndex.value = key
   }
   
-  const handleMobileMenu = (command) => {
-    if (command === 'login' && loginRef.value) {
+  const toggleSidebar = () => {
+    sidebarOpen.value = !sidebarOpen.value
+  }
+  
+  const navigateTo = (path) => {
+    router.push(path)
+    activeIndex.value = path
+    sidebarOpen.value = false
+  }
+  
+  const openLogin = () => {
+    if (loginRef.value) {
       loginRef.value.openDialog()
-    } else if (command === 'register' && regisRef.value) {
+      sidebarOpen.value = false
+    }
+  }
+  
+  const openRegister = () => {
+    if (regisRef.value) {
       regisRef.value.openDialog()
+      sidebarOpen.value = false
     }
   }
 </script>
