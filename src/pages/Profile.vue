@@ -4,14 +4,17 @@
       <!-- 头像部分 -->
       <div class="avatar-section">
         <div class="avatar-container">
+          <!-- 头像显示 -->
           <img 
             :src="user.avatar || defaultAvatar" 
             alt="用户头像" 
             class="avatar"
           />
+          <!-- 头像上传按钮 -->
           <button class="avatar-upload-btn" @click="triggerFileInput">
             <span>+</span>
           </button>
+          <!-- 头像上传输入框 -->
           <input 
             type="file" 
             ref="fileInput" 
@@ -19,6 +22,14 @@
             accept="image/*" 
             @change="handleAvatarUpload"
           />
+          <!-- 问候语部分 -->
+          <div class="greeting">
+            <span class="greeting-text">
+              <img :src="clockImage" alt="时钟贴图" class="clock-image">
+              {{ greeting }}，{{ user.username }}
+            </span>
+            <span class="time">现在是 {{ currentTime }}，距离您上次登录已经过去了 {{ loginInterval }}</span>
+          </div>
         </div>
       </div>
 
@@ -117,9 +128,20 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { onMounted, onUnmounted } from 'vue';
 
 const router = useRouter();
 const fileInput = ref(null);
+
+// 问候语
+const greeting = ref('你好');
+const currentTime = ref(null);
+const loginInterval = ref('21');
+
+// 时钟贴图文件
+const clockImage = ref(
+  new URL(`../assets/clock/1.png`, import.meta.url).href
+);
 
 // 模拟用户数据
 const user = reactive({
@@ -146,6 +168,63 @@ const newAge = ref('');
 const oldPassword = ref('');
 const newPasswordInput = ref('');
 const confirmPassword = ref('');
+
+// 获取当前时间并决定问候语
+const setGreeting = () => {
+  const hour = new Date().getHours();
+  const minute = new Date().getMinutes();
+
+  if (hour >= 5 && hour < 10) {
+    greeting.value = '早上好';
+  } else if (hour >= 10 && hour < 14) {
+    greeting.value = '中午好';
+  } else if (hour >= 14 && hour < 18) {
+    greeting.value = '下午好';
+  } else if (hour >= 18 && hour < 22) {
+    greeting.value = '晚上好';
+  } else {
+    greeting.value = '夜深了 注意休息哦';
+  }
+
+  // 根据hours映射时钟贴图
+  let i = Math.floor((hour * 60 + minute) / 1440 * 64) + 1 + 32;
+  console.log(i);
+  clockImage.value = new URL(`../assets/clock/${i % 64}.png`, import.meta.url).href;
+}
+
+// 更新当前时间
+const updateTime = () => {
+  currentTime.value = new Date().toLocaleString();
+}
+
+// 获取登录间隔
+const updateLoginInterval = () => {
+  let lastTime = new Date(2025, 0, 12, 22, 19, 35).getTime();
+  let now = new Date().getTime();
+  // console.log(lastTime, now);
+  let interval = now - lastTime;
+  loginInterval.value = formatTimestamp(interval);
+}
+
+// 格式化时间戳
+function formatTimestamp(ts) {
+ const second = 1000
+  const minute = second * 60
+  const hour = minute * 60
+  const day = hour * 24
+
+  const days = Math.floor(ts / day)
+  const hours = Math.floor((ts % day) / hour)
+  const minutes = Math.floor((ts % hour) / minute)
+
+  let str = ''
+  if (days > 0) str += `${days}天`
+  if (hours > 0) str += `${hours}时`
+  if (minutes > 0) str += `${minutes}分`
+
+  // console.log(str);
+  return str || '1分'
+}
 
 // 触发文件输入
 const triggerFileInput = () => {
@@ -213,6 +292,27 @@ const logout = () => {
   // 模拟退出登录成功
   router.push('/login');
 };
+
+// 定时器
+let clockTimer = null;
+
+// 页面加载时设置问候语
+onMounted(() => {
+  setGreeting();
+  updateTime();
+  updateLoginInterval();
+
+  clockTimer = setInterval(() => {
+    updateTime();
+  }, 1000);
+});
+
+// 页面卸载时清除定时器
+onUnmounted(() => {
+  clearInterval(clockTimer);
+});
+
+
 </script>
 
 <style lang="scss" scoped>

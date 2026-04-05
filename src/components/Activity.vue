@@ -23,6 +23,10 @@
         border-radius: 0px; /* 圆角大小 */
         overflow: hidden;    /* 必须加！否则圆角不生效 */
         box-shadow: var(--el-box-shadow-light);
+
+        @media (max-width: 768px) {
+            height: 200px;
+        }
     }
     .carousel-item {
         width: 100%;

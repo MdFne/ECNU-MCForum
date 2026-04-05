@@ -194,11 +194,6 @@
     grid-template-columns: 1fr;
   }
 
-  .server-card-content {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .server-thumbnail {
     width: 100px;
     height: 100px;
@@ -212,5 +207,16 @@
 
   .chart-container {
     height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .server-thumbnail {
+    display: none;
+  }
+
+  .server-card-content {
+    flex-direction: row;
+    align-items: center;
   }
 }

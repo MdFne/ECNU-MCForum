@@ -21,7 +21,7 @@
     right: 0; */
 
     position: sticky;
-    top: 5rem;
+    top: 4rem;
     left: 0;
     z-index: 99;
     border-radius: 8px;

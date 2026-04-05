@@ -56,16 +56,27 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { useRouter } from 'vue-router'
+  import { ref, onMounted, onUnmounted, watch } from 'vue'
+  import { useRouter, useRoute } from 'vue-router'
   import Login from '../pages/Login.vue'
   import Regis from '../pages/Regis.vue'
   
   const router = useRouter()
+  const route = useRoute()
   const activeIndex = ref('/')
   const loginRef = ref(null)
   const regisRef = ref(null)
   const sidebarOpen = ref(false)
+  
+  // 初始化时根据当前路由设置activeIndex
+  onMounted(() => {
+    activeIndex.value = route.path
+  })
+  
+  // 监听路由变化，更新activeIndex
+  watch(() => route.path, (newPath) => {
+    activeIndex.value = newPath
+  })
   
   const handleSelect = (key) => {
     activeIndex.value = key
