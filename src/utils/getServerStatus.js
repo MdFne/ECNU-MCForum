@@ -13,11 +13,11 @@ export default defineEventHandler(async () => {
 
     try {
         // 👉 这里替换成你的 MC 服务器 IP + 端口
-        const MC_IP = "你的MC服务器IP"
-        const MC_PORT = "你的MC服务器端口"
+        const MC_IP = "rebuildputuo.ecnumc.cn"
+        const MC_PORT = "25565"
 
         // 请求 MC 服务器状态
-        const res = await fetch(`https://www.minecraftservers.cn/api/query?ip=rebuildputuo.ecnumc.cn`)
+        const res = await fetch(`https://www.minecraftservers.cn/api/query?ip=${MC_IP}%3A${MC_PORT}`)
 
         const data = await res.json()
 

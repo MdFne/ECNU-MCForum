@@ -63,7 +63,7 @@
               </div>
               <div class="server-info-item">
                 <span class="server-info-label">地址:</span>
-                <span class="server-info-value">{{ server.address }}</span>
+                <span class="server-info-value">{{ server.address }}:{{ server.port }}</span>
               </div>
             </div>
             
@@ -92,6 +92,9 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import '../styles/stat.css'
 import { handleServerClick } from '../utils/serverUtils'
+import { formatServersList, createOfflineServerData, createOnlineServerData } from '../utils/serverFormatter'
+
+const API_BASE = 'http://localhost:3000/api'
 
 const chartRefs = ref({})
 const charts = ref({})
@@ -100,10 +103,9 @@ const servers = ref([])
 const overviewStats = ref({})
 const rotatingServer = ref(null)
 
-// 获取概览统计数据
 async function fetchOverviewStats() {
   try {
-    const response = await fetch('http://localhost:3000/api/stats/overview');
+    const response = await fetch(`${API_BASE}/stats/overview`);
     
     if (!response.ok) {
       throw new Error('获取概览统计失败');
@@ -118,39 +120,34 @@ async function fetchOverviewStats() {
   }
 }
 
-// 获取服务器实时状态
 async function getServerRealTimeStats(serverId) {
-  // 触发旋转动画
   rotatingServer.value = serverId;
   
-  // 0.6秒后重置动画状态
   setTimeout(() => {
     rotatingServer.value = null;
-  }, 600);
+  }, 1000);
   
   try {
-    const response = await fetch(`http://localhost:3000/api/stats/servers/${serverId}/realtime`);
+    const response = await fetch(`${API_BASE}/stats/servers/${serverId}/realtime`);
     
     if (!response.ok) {
+      servers.value = servers.value.map(server => {
+        if (server.id === serverId) {
+          return createOfflineServerData(serverId, server);
+        }
+        return server;
+      });
       throw new Error('获取服务器实时状态失败');
     }
     
     const data = await response.json();
     if (data.success) {
-      // 更新服务器数据
-      const updatedServers = servers.value.map(server => {
+      servers.value = servers.value.map(server => {
         if (server.id === serverId) {
-          return {
-            ...server,
-            players: data.data.currentPlayers,
-            maxPlayers: data.data.maxPlayers,
-            status: data.data.onlineStatus
-          };
+          return createOnlineServerData(serverId, server, data.data);
         }
         return server;
       });
-      servers.value = updatedServers;
-      // 更新图表
       initCharts();
     }
   } catch (error) {
@@ -158,7 +155,6 @@ async function getServerRealTimeStats(serverId) {
   }
 }
 
-// 生成最近10天的日期标签
 function getLast10Days() {
   const days = [];
   const today = new Date();
@@ -172,19 +168,16 @@ function getLast10Days() {
 
 const last10Days = getLast10Days();
 
-// 设置图表引用
 function setChartRef(el, serverId) {
   if (el) {
     chartRefs.value[serverId] = el
   }
 }
 
-// 点击图标触发查询
 async function onServerClick() {
   try {
     await handleServerClick((updatedServers) => {
       servers.value = updatedServers
-      // 更新图表
       initCharts()
     })
   } catch (error) {
@@ -192,24 +185,20 @@ async function onServerClick() {
   }
 }
 
-// 初始化图表
 function initCharts() {
   servers.value.forEach(server => {
     const chartEl = chartRefs.value[server.id]
     if (chartEl) {
       let chart = charts.value[server.id]
       if (!chart) {
-        // 如果图表实例不存在，创建新实例
         chart = echarts.init(chartEl)
         charts.value[server.id] = chart
       }
-      // 更新图表数据
       updateServerChart(chart, server)
     }
   })
 }
 
-// 更新服务器图表数据
 function updateServerChart(chart, server) {
   const option = {
     tooltip: {
@@ -267,7 +256,6 @@ function updateServerChart(chart, server) {
   chart.setOption(option)
 }
 
-// 处理窗口大小变化
 function handleResize() {
   Object.values(charts.value).forEach(chart => {
     if (chart) {
@@ -276,49 +264,18 @@ function handleResize() {
   })
 }
 
-// 获取服务器列表数据
 async function fetchServersData() {
   try {
-    // 先获取服务器列表
-    const serversResponse = await fetch('http://localhost:3000/api/stats/servers');
+    const serversResponse = await fetch(`${API_BASE}/stats/servers`);
     
     if (!serversResponse.ok) {
       throw new Error('获取服务器列表失败');
     }
     
     const serversData = await serversResponse.json();
-    console.log('服务器列表数据:', serversData)
     
     if (serversData.success && serversData.data && serversData.data.length > 0) {
-      // 转换服务器数据格式
-      const formattedServers = serversData.data.map(server => ({
-        id: server._id,
-        title: server.title,
-        status: true,
-        players: server.currentPlayers,
-        maxPlayers: server.maxPlayers,
-        version: server.version,
-        type: server.type,
-        address: server.address,
-        thumbnail: server.thumbnail,
-        monthlyHeat: server.monthlyHeat || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        last10dayHeat: server.last10dayHeat || Array(10).fill(0),
-        last_updated_str: server.last_updated_str,
-        motd: server.motd,
-        ping: server.ping,
-        today_max: server.today_max,
-        today_min: server.today_min,
-        today_avg: server.today_avg,
-        history_max: server.history_max,
-        total_queries: server.total_queries,
-        last_updated: server.last_updated,
-        created_at: server.created_at,
-        created_at_str: server.created_at_str
-      }));
-      
-      servers.value = formattedServers;
-      // 初始化图表
-      // 等待 DOM 渲染完成
+      servers.value = formatServersList(serversData.data);
       nextTick(() => {
         initCharts();
       })
@@ -328,14 +285,12 @@ async function fetchServersData() {
   }
 }
 
-// 组件挂载时获取服务器数据
 onMounted(async () => {
   await fetchServersData();
   await fetchOverviewStats();
   window.addEventListener('resize', handleResize);
 })
 
-// 组件卸载时清理图表
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
   Object.values(charts.value).forEach(chart => {
