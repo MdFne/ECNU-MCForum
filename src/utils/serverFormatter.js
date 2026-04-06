@@ -45,8 +45,8 @@ export function createOnlineServerData(serverId, currentServer, realtimeData) {
     return {
         ...currentServer,
         id: serverId,
-        players: realtimeData.currentPlayers,
-        maxPlayers: realtimeData.maxPlayers,
+        players: realtimeData.currentPlayers === -1 ? NaN : realtimeData.currentPlayers,
+        maxPlayers: realtimeData.maxPlayers === -1 ? NaN : realtimeData.maxPlayers,
         status: realtimeData.onlineStatus
     };
 }
