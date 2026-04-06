@@ -29,6 +29,8 @@ export async function handleServerClick(updateServers) {
       if (serversData.success && serversData.data) {
         const formattedServers = formatServersList(serversData.data);
 
+        console.log('格式化后的服务器列表:', formattedServers);
+
         if (updateServers) {
           updateServers(formattedServers);
         }

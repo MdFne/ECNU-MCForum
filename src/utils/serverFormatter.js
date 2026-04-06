@@ -1,6 +1,7 @@
 export function formatServerData(server) {
     return {
         id: server._id,
+        name: server.name,
         title: server.title,
         status: server.isActive,
         players: server.currentPlayers === -1 ? NaN : server.currentPlayers,
