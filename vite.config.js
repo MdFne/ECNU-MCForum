@@ -18,4 +18,13 @@ export default defineConfig({
     }),
     ElementPlus(),
   ],
+  server: {
+    proxy: {
+      '/api/minecraft': {
+        target: 'https://www.minecraftservers.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/minecraft/, '/api/query')
+      }
+    }
+  }
 })

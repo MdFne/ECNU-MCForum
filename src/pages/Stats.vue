@@ -5,9 +5,24 @@
         src="../assets/serv2.png" 
         alt="服务器图标" 
         class="server-image"
-        @click="handleServerClick()"
+        @click="onServerClick()"
       />
       <h1 class="stats-title">服务器统计</h1>
+    </div>
+
+    <div class="overview-stats">
+      <div class="overview-item">
+        <span class="overview-label">总服务器数:</span>
+        <span class="overview-value">{{ overviewStats.totalServers || 0 }}</span>
+      </div>
+      <div class="overview-item">
+        <span class="overview-label">在线服务器数:</span>
+        <span class="overview-value">{{ overviewStats.onlineServers || 0 }}</span>
+      </div>
+      <div class="overview-item">
+        <span class="overview-label">总玩家数:</span>
+        <span class="overview-value">{{ overviewStats.totalPlayers || 0 }}</span>
+      </div>
     </div>
     
     <div class="servers-grid">
@@ -36,7 +51,7 @@
             <div class="server-info">
               <div class="server-info-item">
                 <span class="server-info-label">人数:</span>
-                <span class="server-info-value">{{ server.players }}/64</span>
+                <span class="server-info-value">{{ server.players }}/{{ server.maxPlayers }}</span>
               </div>
               <div class="server-info-item">
                 <span class="server-info-label">版本:</span>
@@ -51,9 +66,20 @@
                 <span class="server-info-value">{{ server.address }}</span>
               </div>
             </div>
+            
           </div>
           <div class="server-chart">
             <div :ref="el => setChartRef(el, server.id)" class="chart-container"></div>
+          </div>
+
+          <div class="reload-button" @click="getServerRealTimeStats(server.id)">
+            <img 
+              src="../assets/reload.png" 
+              alt="刷新" 
+              class="reload-icon" 
+              :class="{ 'rotate': rotatingServer === server.id }"
+              :key="`reload-${server.id}`"
+            />
           </div>
         </div>
       </div>
@@ -62,135 +88,128 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import '../styles/stat.css'
+import { handleServerClick } from '../utils/serverUtils'
 
 const chartRefs = ref({})
 const charts = ref({})
 
-const servers = [
-  {
-    id: 1,
-    title: '[主服]生存世界',
-    status: true,
-    players: 45,
-    version: '1.20.4',
-    type: '生存',
-    address: 'mc.example.com:25565',
-    thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Minecraft%20survival%20server%20landscape%20with%20trees%20and%20mountains&image_size=portrait_4_3',
-    monthlyHeat: [35, 42, 48, 52, 45, 50, 48, 55, 60, 58, 62, 65]
-  },
-  {
-    id: 2,
-    title: '[主服]创造世界',
-    status: true,
-    players: 23,
-    version: '1.20.4',
-    type: '创造',
-    address: 'mc.example.com:25566',
-    thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Minecraft%20creative%20server%20with%20modern%20buildings&image_size=portrait_4_3',
-    monthlyHeat: [20, 25, 30, 28, 32, 26, 29, 35, 33, 30, 28, 31]
-  },
-  {
-    id: 3,
-    title: '[测试服]快照版',
-    status: false,
-    players: 0,
-    version: '1.21.0',
-    type: '生存',
-    address: 'test.example.com:25565',
-    thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Minecraft%20snapshot%20server%20with%20experimental%20features&image_size=portrait_4_3',
-    monthlyHeat: [5, 8, 12, 10, 6, 4, 2, 0, 0, 0, 0, 0]
-  },
-  {
-    id: 4,
-    title: '[小游戏]空岛战争',
-    status: true,
-    players: 32,
-    version: '1.19.4',
-    type: '小游戏',
-    address: 'minigame.example.com:25565',
-    thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Minecraft%20skywars%20minigame%20with%20islands&image_size=portrait_4_3',
-    monthlyHeat: [28, 35, 40, 45, 42, 38, 40, 48, 52, 48, 50, 55]
-  },
-  {
-    id: 5,
-    title: '[生存]硬核模式',
-    status: true,
-    players: 18,
-    version: '1.20.4',
-    type: '生存',
-    address: 'hardcore.example.com:25565',
-    thumbnail: 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=Minecraft%20hardcore%20survival%20server%20difficult%20terrain&image_size=portrait_4_3',
-    monthlyHeat: [15, 18, 20, 22, 19, 21, 18, 24, 26, 23, 25, 28]
+const servers = ref([])
+const overviewStats = ref({})
+const rotatingServer = ref(null)
+
+// 获取概览统计数据
+async function fetchOverviewStats() {
+  try {
+    const response = await fetch('http://localhost:3000/api/stats/overview');
+    
+    if (!response.ok) {
+      throw new Error('获取概览统计失败');
+    }
+    
+    const data = await response.json();
+    if (data.success) {
+      overviewStats.value = data.data;
+    }
+  } catch (error) {
+    console.error('获取概览统计失败:', error);
   }
-]
+}
 
-const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+// 获取服务器实时状态
+async function getServerRealTimeStats(serverId) {
+  // 触发旋转动画
+  rotatingServer.value = serverId;
+  
+  // 0.6秒后重置动画状态
+  setTimeout(() => {
+    rotatingServer.value = null;
+  }, 600);
+  
+  try {
+    const response = await fetch(`http://localhost:3000/api/stats/servers/${serverId}/realtime`);
+    
+    if (!response.ok) {
+      throw new Error('获取服务器实时状态失败');
+    }
+    
+    const data = await response.json();
+    if (data.success) {
+      // 更新服务器数据
+      const updatedServers = servers.value.map(server => {
+        if (server.id === serverId) {
+          return {
+            ...server,
+            players: data.data.currentPlayers,
+            maxPlayers: data.data.maxPlayers,
+            status: data.data.onlineStatus
+          };
+        }
+        return server;
+      });
+      servers.value = updatedServers;
+      // 更新图表
+      initCharts();
+    }
+  } catch (error) {
+    console.error('获取服务器实时状态失败:', error);
+  }
+}
 
+// 生成最近10天的日期标签
+function getLast10Days() {
+  const days = [];
+  const today = new Date();
+  for (let i = 9; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - i);
+    days.push(`${date.getMonth() + 1}/${date.getDate()}`);
+  }
+  return days;
+}
+
+const last10Days = getLast10Days();
+
+// 设置图表引用
 function setChartRef(el, serverId) {
   if (el) {
     chartRefs.value[serverId] = el
   }
 }
 
-// debug：点击图标触发查询
-function handleServerClick(serverId = 1) {
-  const getRebuildStats = async() => {
-    try {
-      // 后端 API 地址
-      // const response = await fetch(`http://localhost:3000/api/stats/servers/${serverId}/realtime`);
-      const response = await fetch(`http://localhost:3000/api/stats/servers`);
-      
-      if (!response.ok) {
-        throw new Error('请求失败');
-      }
-      
-      const data = await response.json();
-      console.log('服务器查询结果:', data);
-      
-      // 可以在这里更新前端显示的数据
-      if (data.success) {
-        console.log('服务器状态:', data.data);
-        const rebuildServerData = await fetch(`http://localhost:3000/api/stats/servers/${data.data[serverId - 1]._id}/realtime`);
-        console.log('重建服务器状态:', await rebuildServerData.json());
-        
-        // 更新对应服务器的状态
-      }
-    } catch (error) {
-      console.error('获取服务器状态失败:', error);
-    }
+// 点击图标触发查询
+async function onServerClick() {
+  try {
+    await handleServerClick((updatedServers) => {
+      servers.value = updatedServers
+      // 更新图表
+      initCharts()
+    })
+  } catch (error) {
+    console.error('处理服务器点击事件失败:', error)
   }
-  getRebuildStats();
 }
 
 // 初始化图表
-onMounted(() => {
-  initCharts()
-  window.addEventListener('resize', handleResize)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-  Object.values(charts.value).forEach(chart => {
-    if (chart) {
-      chart.dispose()
-    }
-  })
-})
-
 function initCharts() {
-  servers.forEach(server => {
+  servers.value.forEach(server => {
     const chartEl = chartRefs.value[server.id]
     if (chartEl) {
-      const chart = echarts.init(chartEl)
-      charts.value[server.id] = chart
+      let chart = charts.value[server.id]
+      if (!chart) {
+        // 如果图表实例不存在，创建新实例
+        chart = echarts.init(chartEl)
+        charts.value[server.id] = chart
+      }
+      // 更新图表数据
       updateServerChart(chart, server)
     }
   })
 }
 
+// 更新服务器图表数据
 function updateServerChart(chart, server) {
   const option = {
     tooltip: {
@@ -204,17 +223,18 @@ function updateServerChart(chart, server) {
     },
     xAxis: {
       type: 'category',
-      data: months,
+      data: last10Days,
       axisLabel: {
         fontSize: 10,
-        interval: 2
+        interval: 1,
+        rotate: 45
       }
     },
     yAxis: {
       type: 'value',
       min: 0,
-      max: 70,
-      interval: 20,
+      max: Math.max(...server.last10dayHeat, 10),
+      interval: 2,
       axisLabel: {
         fontSize: 10
       }
@@ -223,7 +243,7 @@ function updateServerChart(chart, server) {
       {
         name: '热度',
         type: 'line',
-        data: server.monthlyHeat,
+        data: server.last10dayHeat,
         smooth: true,
         itemStyle: {
           color: '#188df0'
@@ -247,6 +267,7 @@ function updateServerChart(chart, server) {
   chart.setOption(option)
 }
 
+// 处理窗口大小变化
 function handleResize() {
   Object.values(charts.value).forEach(chart => {
     if (chart) {
@@ -254,4 +275,73 @@ function handleResize() {
     }
   })
 }
+
+// 获取服务器列表数据
+async function fetchServersData() {
+  try {
+    // 先获取服务器列表
+    const serversResponse = await fetch('http://localhost:3000/api/stats/servers');
+    
+    if (!serversResponse.ok) {
+      throw new Error('获取服务器列表失败');
+    }
+    
+    const serversData = await serversResponse.json();
+    console.log('服务器列表数据:', serversData)
+    
+    if (serversData.success && serversData.data && serversData.data.length > 0) {
+      // 转换服务器数据格式
+      const formattedServers = serversData.data.map(server => ({
+        id: server._id,
+        title: server.title,
+        status: true,
+        players: server.currentPlayers,
+        maxPlayers: server.maxPlayers,
+        version: server.version,
+        type: server.type,
+        address: server.address,
+        thumbnail: server.thumbnail,
+        monthlyHeat: server.monthlyHeat || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        last10dayHeat: server.last10dayHeat || Array(10).fill(0),
+        last_updated_str: server.last_updated_str,
+        motd: server.motd,
+        ping: server.ping,
+        today_max: server.today_max,
+        today_min: server.today_min,
+        today_avg: server.today_avg,
+        history_max: server.history_max,
+        total_queries: server.total_queries,
+        last_updated: server.last_updated,
+        created_at: server.created_at,
+        created_at_str: server.created_at_str
+      }));
+      
+      servers.value = formattedServers;
+      // 初始化图表
+      // 等待 DOM 渲染完成
+      nextTick(() => {
+        initCharts();
+      })
+    }
+  } catch (error) {
+    console.error('获取服务器数据失败:', error);
+  }
+}
+
+// 组件挂载时获取服务器数据
+onMounted(async () => {
+  await fetchServersData();
+  await fetchOverviewStats();
+  window.addEventListener('resize', handleResize);
+})
+
+// 组件卸载时清理图表
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+  Object.values(charts.value).forEach(chart => {
+    if (chart) {
+      chart.dispose()
+    }
+  })
+})
 </script>
