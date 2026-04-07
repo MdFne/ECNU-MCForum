@@ -60,6 +60,10 @@ const loading = ref(false)
 const hasMore = ref(true)
 const page = ref(1)
 
+const carouselItems = ref([])
+
+
+
 // 模拟加载更多数据
 const loadMoreData = () => {
   if (loading.value || !hasMore.value) return
