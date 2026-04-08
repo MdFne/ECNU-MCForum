@@ -90,7 +90,7 @@ onMounted(() => {
     flex-direction: row;
     align-items: center;
     gap: 12px;
-    padding: 0px;
+    padding: 0 4px 0 0;
     background-color: #fff;
     border-radius: 6px;
     transition: all 0.3s ease;

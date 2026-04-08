@@ -1,5 +1,6 @@
 <template>
-  <div class="bgIMG">
+  <div class="bg-box">
+    <div class="bgIMG"></div>
     <div class="stats-container">
       <div class="stats-header">
         <img 
@@ -287,14 +288,25 @@ async function fetchServersData() {
   }
 }
 
+// 视差滚动
+const parallaxScroll = () => {
+  const scrollTop = window.scrollY
+  const bg = document.querySelector('.bgIMG')
+  
+  // 慢速移动：scrollY * 0.3
+  bg.style.transform = `translateY(${scrollTop * -0.3}px)`
+}
+
 onMounted(async () => {
   await fetchServersData();
   await fetchOverviewStats();
-  window.addEventListener('resize', handleResize);
+  window.addEventListener('resize', handleResize)
+  window.addEventListener('scroll', parallaxScroll);
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
+  window.removeEventListener('scroll', parallaxScroll)
   Object.values(charts.value).forEach(chart => {
     if (chart) {
       chart.dispose()

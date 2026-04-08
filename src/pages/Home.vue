@@ -67,18 +67,30 @@ const handleScroll = () => {
   }
 }
 
+// 视差滚动
+const parallaxScroll = () => {
+  const scrollTop = window.scrollY
+  const bg = document.querySelector('.bgIMG')
+  
+  // 慢速移动：scrollY * 0.3
+  bg.style.transform = `translateY(${scrollTop * -0.3}px)`
+}
+
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
+  window.addEventListener('scroll', parallaxScroll)
   loadPostcards() // 初始加载数据
 })
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('scroll', parallaxScroll)
 })
 </script>
 
 <template>
-  <div class="bgIMG">
+  <div class="bg-box">
+    <div class="bgIMG"></div>
     <div class="main">
     <Activity />
       <div class="container">

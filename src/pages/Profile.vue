@@ -1,5 +1,6 @@
 <template>
-  <div class="bgIMG">
+  <div class="bg-box">
+    <div class="bgIMG"></div>
     <div class="profile">
       <div class="profile-card">
         <!-- 头像部分 -->
@@ -295,6 +296,15 @@ const logout = () => {
   router.push('/login');
 };
 
+// 视差滚动
+const parallaxScroll = () => {
+  const scrollTop = window.scrollY
+  const bg = document.querySelector('.bgIMG')
+  
+  // 慢速移动：scrollY * 0.3
+  bg.style.transform = `translateY(${scrollTop * -0.3}px)`
+}
+
 // 定时器
 let clockTimer = null;
 
@@ -303,6 +313,7 @@ onMounted(() => {
   setGreeting();
   updateTime();
   updateLoginInterval();
+  window.addEventListener('scroll', parallaxScroll);
 
   clockTimer = setInterval(() => {
     updateTime();
@@ -312,6 +323,7 @@ onMounted(() => {
 // 页面卸载时清除定时器
 onUnmounted(() => {
   clearInterval(clockTimer);
+  window.removeEventListener('scroll', parallaxScroll);
 });
 
 

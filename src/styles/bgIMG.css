@@ -1,12 +1,21 @@
-  .bgIMG {
-      width: 100%;
-      flex: 1;
-      background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-          url('../assets/ECNUSakura/3.png') center/cover no-repeat;
-      background-size: cover;
-      background-position: center;
-      padding: 20px 0;
-      display: flex;
-      justify-content: center;
+.bgIMG {
+    width: 100%;
+    /* flex: 1; */
+    height: 1500px;
+    position: fixed;
+    top: -10%;
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+        url('../assets/ECNUSakura/3.png') center / cover no-repeat;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
 
-  }
+.bg-box {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+}
