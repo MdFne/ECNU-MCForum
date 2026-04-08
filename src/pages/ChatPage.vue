@@ -1,32 +1,34 @@
 <template>
-  <div class="forum-container">
-    <div class="channels-sidebar">
-      <h2>频道</h2>
-      <div class="channels-list">
-        <Channel v-for="channel in channels" :key="channel.id" :channel="channel" :active="channel.id === channelId" />
-      </div>
-    </div>
-    <div class="chat-page">
-      <div class="chat-header">
-        <h2>{{ channelName }}</h2>
-      </div>
-      
-      <div class="chat-messages">
-        <div v-for="message in messages" :key="message.id" class="message">
-          <div class="message-sender">{{ message.sender }}</div>
-          <div class="message-content">{{ message.content }}</div>
-          <div class="message-time">{{ message.time }}</div>
+  <div class="bgIMG">
+    <div class="forum-container">
+      <div class="channels-sidebar">
+        <h2>频道</h2>
+        <div class="channels-list">
+          <Channel v-for="channel in channels" :key="channel.id" :channel="channel" :active="channel.id === channelId" />
         </div>
       </div>
-      
-      <div class="chat-input">
-        <input 
-          type="text" 
-          v-model="newMessage" 
-          placeholder="输入消息..."
-          @keyup.enter="sendMessage"
-        />
-        <button @click="sendMessage">发送</button>
+      <div class="chat-page">
+        <div class="chat-header">
+          <h2>{{ channelName }}</h2>
+        </div>
+        
+        <div class="chat-messages">
+          <div v-for="message in messages" :key="message.id" class="message">
+            <div class="message-sender">{{ message.sender }}</div>
+            <div class="message-content">{{ message.content }}</div>
+            <div class="message-time">{{ message.time }}</div>
+          </div>
+        </div>
+        
+        <div class="chat-input">
+          <input 
+            type="text" 
+            v-model="newMessage" 
+            placeholder="输入消息..."
+            @keyup.enter="sendMessage"
+          />
+          <button @click="sendMessage">发送</button>
+        </div>
       </div>
     </div>
   </div>
@@ -236,6 +238,12 @@ const scrollToBottom = () => {
 </script>
 
 <style scoped>
-@import '../styles/forum.css';
-@import '../styles/chat.css';
+  @import '../styles/forum.css';
+  @import '../styles/chat.css';
+  @import '../styles/bgIMG.css';
+
+  .bgIMG {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+          url('../assets/ECNUSakura/2.png') center/cover no-repeat;
+  }
 </style>

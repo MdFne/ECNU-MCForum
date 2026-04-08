@@ -78,7 +78,7 @@
 
   .carousel-info {
     width: 100%;
-    padding: 20px;
+    padding: 20px 30px; /* 添加左右内边距 */
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
     color: #fff;
     text-align: left;
@@ -96,7 +96,10 @@
     opacity: 0.9;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    display: -webkit-box; /* 启用弹性盒子 */
+    -webkit-line-clamp: 2; /* 限制两行 */
+    -webkit-box-orient: vertical; /* 垂直方向 */
+    white-space: normal; /* 允许换行 */
   }
 
   .default-item {

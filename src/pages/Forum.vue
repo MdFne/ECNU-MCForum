@@ -1,14 +1,16 @@
 <template>
-  <div class="forum-container">
-    <div class="channels-sidebar">
-      <h2>频道</h2>
-      <div class="channels-list">
-        <Channel v-for="channel in channels" :key="channel.id" :channel="channel" />
+  <div class="bgIMG">
+    <div class="forum-container">
+      <div class="channels-sidebar">
+        <h2>频道</h2>
+        <div class="channels-list">
+          <Channel v-for="channel in channels" :key="channel.id" :channel="channel" />
+        </div>
       </div>
-    </div>
-    <div class="chat-content">
-      <h2>选择一个频道开始聊天</h2>
-      <p>点击左侧频道进入对应的聊天室</p>
+      <div class="chat-content">
+        <h2>选择一个频道开始聊天</h2>
+        <p>点击左侧频道进入对应的聊天室</p>
+      </div>
     </div>
   </div>
 </template>
@@ -45,5 +47,11 @@ const channels = [
 </script>
 
 <style scoped>
-@import '../styles/forum.css';
+  @import '../styles/forum.css';  
+  @import '../styles/bgIMG.css';
+
+  .bgIMG {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+          url('../assets/ECNUSakura/2.png') center/cover no-repeat;
+  }
 </style>
