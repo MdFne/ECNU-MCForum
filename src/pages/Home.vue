@@ -78,7 +78,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="main">
+  <div class="bgIMG">
+    <div class="main">
     <Activity />
       <div class="container">
         <div class="content">
@@ -107,14 +108,15 @@ onUnmounted(() => {
         </div>
         <AppSideBarr />  
     </div>
+    </div>
   </div>
 </template>
 
 <style scoped> 
   @import '../styles/homeLoading.css';
-
+  @import '../styles/bgIMG.css';
+  
   .main {
-    align-self: center;
     height: 100%;
     width: min(80%,900px);
     margin: 0;

@@ -1,85 +1,87 @@
 <template>
-  <div class="stats-container">
-    <div class="stats-header">
-      <img 
-        src="../assets/serv2.png" 
-        alt="服务器图标" 
-        class="server-image"
-        @click="onServerClick()"
-      />
-      <h1 class="stats-title">服务器统计</h1>
-    </div>
+  <div class="bgIMG">
+    <div class="stats-container">
+      <div class="stats-header">
+        <img 
+          src="../assets/serv2.png" 
+          alt="服务器图标" 
+          class="server-image"
+          @click="onServerClick()"
+        />
+        <h1 class="stats-title">服务器统计</h1>
+      </div>
 
-    <div class="overview-stats">
-      <div class="overview-item">
-        <span class="overview-label">总服务器数:</span>
-        <span class="overview-value">{{ overviewStats.totalServers || 0 }}</span>
+      <div class="overview-stats">
+        <div class="overview-item">
+          <span class="overview-label">总服务器数:</span>
+          <span class="overview-value">{{ overviewStats.totalServers || 0 }}</span>
+        </div>
+        <div class="overview-item">
+          <span class="overview-label">在线服务器数:</span>
+          <span class="overview-value">{{ overviewStats.onlineServers || 0 }}</span>
+        </div>
+        <div class="overview-item">
+          <span class="overview-label">总玩家数:</span>
+          <span class="overview-value">{{ overviewStats.totalPlayers || 0 }}</span>
+        </div>
       </div>
-      <div class="overview-item">
-        <span class="overview-label">在线服务器数:</span>
-        <span class="overview-value">{{ overviewStats.onlineServers || 0 }}</span>
-      </div>
-      <div class="overview-item">
-        <span class="overview-label">总玩家数:</span>
-        <span class="overview-value">{{ overviewStats.totalPlayers || 0 }}</span>
-      </div>
-    </div>
-    
-    <div class="servers-grid">
-      <div 
-        v-for="server in servers" 
-        :key="server.id" 
-        class="server-card"
-      >
-        <div class="server-card-content">
-          <div class="server-thumbnail">
-            <img 
-              :src="server.thumbnail" 
-              :alt="server.title" 
-              class="thumbnail-image"
-            />
-          </div>
-          <div class="server-details">
-            <div class="server-header">
-              <h2 class="server-title">{{ server.title }}</h2>
-              <span 
-                :class="['server-status', server.status ? 'online' : 'offline']"
-              >
-                {{ server.status ? '在线' : '离线' }}
-              </span>
+      
+      <div class="servers-grid">
+        <div 
+          v-for="server in servers" 
+          :key="server.id" 
+          class="server-card"
+        >
+          <div class="server-card-content">
+            <div class="server-thumbnail">
+              <img 
+                :src="server.thumbnail" 
+                :alt="server.title" 
+                class="thumbnail-image"
+              />
             </div>
-            <div class="server-info">
-              <div class="server-info-item">
-                <span class="server-info-label">人数:</span>
-                <span class="server-info-value">{{ server.players }}/{{ server.maxPlayers }}</span>
+            <div class="server-details">
+              <div class="server-header">
+                <h2 class="server-title">{{ server.title }}</h2>
+                <span 
+                  :class="['server-status', server.status ? 'online' : 'offline']"
+                >
+                  {{ server.status ? '在线' : '离线' }}
+                </span>
               </div>
-              <div class="server-info-item">
-                <span class="server-info-label">版本:</span>
-                <span class="server-info-value">{{ server.version }}</span>
+              <div class="server-info">
+                <div class="server-info-item">
+                  <span class="server-info-label">人数:</span>
+                  <span class="server-info-value">{{ server.players }}/{{ server.maxPlayers }}</span>
+                </div>
+                <div class="server-info-item">
+                  <span class="server-info-label">版本:</span>
+                  <span class="server-info-value">{{ server.version }}</span>
+                </div>
+                <div class="server-info-item">
+                  <span class="server-info-label">类型:</span>
+                  <span class="server-info-value">{{ server.type }}</span>
+                </div>
+                <div class="server-info-item">
+                  <span class="server-info-label">地址:</span>
+                  <span class="server-info-value">{{ server.address }}:{{ server.port }}</span>
+                </div>
               </div>
-              <div class="server-info-item">
-                <span class="server-info-label">类型:</span>
-                <span class="server-info-value">{{ server.type }}</span>
-              </div>
-              <div class="server-info-item">
-                <span class="server-info-label">地址:</span>
-                <span class="server-info-value">{{ server.address }}:{{ server.port }}</span>
-              </div>
+              
             </div>
-            
-          </div>
-          <div class="server-chart">
-            <div :ref="el => setChartRef(el, server.id)" class="chart-container"></div>
-          </div>
+            <div class="server-chart">
+              <div :ref="el => setChartRef(el, server.id)" class="chart-container"></div>
+            </div>
 
-          <div class="reload-button" @click="getServerRealTimeStats(server.id)">
-            <img 
-              src="../assets/reload.png" 
-              alt="刷新" 
-              class="reload-icon" 
-              :class="{ 'rotate': rotatingServer === server.id }"
-              :key="`reload-${server.id}`"
-            />
+            <div class="reload-button" @click="getServerRealTimeStats(server.id)">
+              <img 
+                src="../assets/reload.png" 
+                alt="刷新" 
+                class="reload-icon" 
+                :class="{ 'rotate': rotatingServer === server.id }"
+                :key="`reload-${server.id}`"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -300,3 +302,12 @@ onUnmounted(() => {
   })
 })
 </script>
+
+<style scoped> 
+  @import '../styles/bgIMG.css';
+
+  .bgIMG {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+          url('../assets/ECNUSakura/5.png') center/cover no-repeat;
+  }
+</style>

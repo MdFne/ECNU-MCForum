@@ -3,6 +3,9 @@
     <div class="links">
       <div class="link">
         <h2>活动预告</h2>
+        <div class="trailer">
+          <ActivityTrailer />
+        </div>
       </div>
       <div class="link">
         <h2>皮肤站</h2>
@@ -23,8 +26,9 @@
 
 <script setup>
   import { ref } from 'vue'
-  import AutoCollapse from './AutoCollapse.vue'
-  import biliIcon from '../assets/linkIcon/bilibili.png'
+import AutoCollapse from './AutoCollapse.vue'
+import ActivityTrailer from './ActivityTrailer.vue'
+import biliIcon from '../assets/linkIcon/bilibili.png'
   import qqIcon from '../assets/linkIcon/qq.png'
   import outLinkIcon from '../assets/linkIcon/outLink.png'
 
@@ -68,6 +72,12 @@
     align-items: center;
     padding: 16px 0;
     gap: 16px;
+    overflow: auto;
+  }
+
+  /* 针对 WebKit 浏览器隐藏滚动条 */
+  .sidebar-bar::-webkit-scrollbar {
+    display: none;
   }
 
   .links {
@@ -101,8 +111,20 @@
     font-weight: bold;
     color: #5d5d5d;
     padding-bottom: 4px;
-    margin: 12px 0 0 0;
+    margin: 12px 0 8px 0;
     border-bottom: 2px solid lightgray;
+  }
+
+  .trailer {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  .trailer::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
   }
 
   .link a {
