@@ -23,86 +23,86 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { getActiveCarousels } from '../api/carousel'
-import { ElMessage } from 'element-plus'
+  import { ref, onMounted } from 'vue'
+  import { getActiveCarousels } from '../api/carousel'
+  import { ElMessage } from 'element-plus'
 
-const carouselItems = ref([])
+  const carouselItems = ref([])
 
-const fetchCarousels = async () => {
-  try {
-    const response = await getActiveCarousels()
-    if (response.data.success) {
-      carouselItems.value = response.data.data
+  const fetchCarousels = async () => {
+    try {
+      const response = await getActiveCarousels()
+      if (response.data.success) {
+        carouselItems.value = response.data.data
+      }
+    } catch (error) {
+      console.error('获取轮播图失败:', error)
+      ElMessage.error('获取轮播图失败')
     }
-  } catch (error) {
-    console.error('获取轮播图失败:', error)
-    ElMessage.error('获取轮播图失败')
   }
-}
 
-onMounted(() => {
-  fetchCarousels()
-})
+  onMounted(() => {
+    fetchCarousels()
+  })
 </script>
 
 <style scoped>
-:deep(.el-carousel) {
-  border-radius: 8px; /* 增加一点圆角 */
-  overflow: hidden;
-  box-shadow: var(--el-box-shadow-light);
+  :deep(.el-carousel) {
+    border-radius: 8px; /* 增加一点圆角 */
+    overflow: hidden;
+    box-shadow: var(--el-box-shadow-light);
 
-  @media (max-width: 768px) {
-    height: 200px;
+    @media (max-width: 768px) {
+      height: 200px;
+    }
   }
-}
 
-.carousel-link {
-  text-decoration: none;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
+  .carousel-link {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
-.carousel-item {
-  width: 100%;
-  height: 100%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  position: relative;
-}
+  .carousel-item {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+  }
 
-.carousel-info {
-  width: 100%;
-  padding: 20px;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-  color: #fff;
-  text-align: left;
-}
+  .carousel-info {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: #fff;
+    text-align: left;
+  }
 
-.carousel-info h3 {
-  margin: 0;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
+  .carousel-info h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 
-.carousel-info p {
-  margin: 5px 0 15px 0;
-  font-size: 0.9rem;
-  opacity: 0.9;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+  .carousel-info p {
+    margin: 5px 0 15px 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-.default-item {
-  background-color: #f5f7fa;
-  color: #909399;
-  font-size: 1.2rem;
-  align-items: center;
-}
+  .default-item {
+    background-color: #f5f7fa;
+    color: #909399;
+    font-size: 1.2rem;
+    align-items: center;
+  }
 </style>

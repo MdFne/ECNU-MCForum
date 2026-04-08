@@ -188,7 +188,7 @@ const setGreeting = () => {
 
   // 根据hours映射时钟贴图
   let i = Math.floor((hour * 60 + minute) / 1440 * 64) + 1 + 32;
-  // console.log(i);
+  console.log(i);
   clockImage.value = new URL(`../assets/clock/${i % 64}.png`, import.meta.url).href;
 }
 
