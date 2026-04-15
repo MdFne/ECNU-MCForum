@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-box">
-    <div class="bgIMG"></div>
+  <div class="bg-content">
+    <div class="bg-image"></div>
     <div class="profile">
       <div class="profile-card">
         <!-- 头像部分 -->
@@ -299,7 +299,7 @@ const logout = () => {
 // 视差滚动
 const parallaxScroll = () => {
   const scrollTop = window.scrollY
-  const bg = document.querySelector('.bgIMG')
+  const bg = document.querySelector('.bg-image')
   
   // 慢速移动：scrollY * 0.3
   bg.style.transform = `translateY(${scrollTop * -0.3}px)`
@@ -329,16 +329,182 @@ onUnmounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
-  @use '../styles/profile.scss';
-  @import '../styles/bgIMG.css';
+<style scoped>
+  /* Profile page styles */
+  .profile {
+    width: min(80%, 900px);
+    margin: 0 auto;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
 
-  .bgIMG {
+  .profile h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-text);
+  }
+
+  .profile-card {
+    background: var(--color-bg-white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    padding: 2rem;
+  }
+
+  .avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .avatar-container {
+    position: relative;
+    margin-bottom: 1rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 85%;
+  }
+
+  .avatar-container .avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #e0e0e0;
+  }
+
+  .avatar-upload-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: var(--color-success);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  .avatar-upload-btn:hover {
+    background: #45a049;
+  }
+
+  .greeting {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    width: 70%;
+    line-height: 1.1;
+  }
+
+  .greeting .clock-image {
+    width: 2.5rem;
+    height: auto;
+    display: inline;
+    margin-bottom: -0.3rem;
+  }
+
+  .greeting .greeting-text {
+    margin-top: 0.8rem;
+    text-align: left;
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .greeting .time {
+    text-align: left;
+    font-size: 1.2rem;
+    color: var(--color-text-secondary);
+  }
+
+  .user-info {
+    margin-bottom: 2rem;
+  }
+
+  .user-info .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .user-info .info-item:last-child {
+    border-bottom: none;
+  }
+
+  .user-info .info-item .label {
+    font-weight: 600;
+    color: var(--color-text-secondary);
+  }
+
+  .user-info .info-item .value {
+    color: var(--color-text);
+  }
+
+  .user-info .info-item .edit-btn {
+    background: #f0f0f0;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+
+  .user-info .info-item .edit-btn:hover {
+    background: #e0e0e0;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .action-buttons button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .action-buttons button.change-password {
+    background: var(--color-info);
+    color: white;
+  }
+
+  .action-buttons button.change-password:hover {
+    background: #0b7dda;
+  }
+
+  .action-buttons button.logout {
+    background: var(--color-danger);
+    color: white;
+  }
+
+  .action-buttons button.logout:hover {
+    background: #da190b;
+  }
+
+  .bg-image {
     background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
           url('../assets/ECNUSakura/4.png') center/cover no-repeat;
   }
 
-  // 弹窗样式
+  /* 弹窗样式 */
   .modal {
     position: fixed;
     top: 0;
@@ -350,63 +516,112 @@ onUnmounted(() => {
     align-items: center;
     justify-content: center;
     z-index: 1000;
-
-    .modal-content {
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-
-      h3 {
-        margin-bottom: 1rem;
-        text-align: center;
-      }
-
-      input {
-        width: 100%;
-        padding: 0.8rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-
-      .modal-buttons {
-        display: flex;
-        gap: 1rem;
-        justify-content: flex-end;
-
-        button {
-          padding: 0.6rem 1.2rem;
-          border: none;
-          border-radius: 4px;
-          cursor: pointer;
-
-          &:first-child {
-            background: #f0f0f0;
-
-            &:hover {
-              background: #e0e0e0;
-            }
-          }
-
-          &:last-child {
-            background: #4CAF50;
-            color: white;
-
-            &:hover {
-              background: #45a049;
-            }
-          }
-        }
-      }
-    }
   }
 
-  // 用户名等带按钮的样式
+  .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .modal-content h3 {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .modal-content input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-sm);
+  }
+
+  .modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+
+  .modal-buttons button {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .modal-buttons button:first-child {
+    background: #f0f0f0;
+  }
+
+  .modal-buttons button:first-child:hover {
+    background: #e0e0e0;
+  }
+
+  .modal-buttons button:last-child {
+    background: var(--color-success);
+    color: white;
+  }
+
+  .modal-buttons button:last-child:hover {
+    background: #45a049;
+  }
+
+  /* 用户名等带按钮的样式 */
   .value-with-btn {
     display: flex;
     align-items: center;
     gap: 1rem;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .profile {
+      padding: 1rem;
+    }
+
+    .profile-card {
+      padding: 1.5rem;
+    }
+
+    .avatar-container {
+      width: 90%;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 0;
+      gap: 1rem;
+    }
+
+    .greeting {
+      width: 100%;
+    }
+
+    .greeting .greeting-text {
+      font-size: 2rem;
+    }
+
+    .greeting .time {
+      font-size: 1rem;
+    }
+
+    .avatar-container .avatar {
+      width: 100px;
+      height: 100px;
+      order: 1;
+    }
+
+    .avatar-upload-btn {
+      left: 25%;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+    }
+
+    .action-buttons button {
+      width: 100%;
+    }
   }
 </style>

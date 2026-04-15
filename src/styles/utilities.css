@@ -1,0 +1,66 @@
+/* ============================================================
+   utilities.css — 工具类
+   跨组件复用的通用样式：加载指示器、背景图等。
+   ============================================================ */
+
+/* ---- 加载指示器样式 ---- */
+.loading-container {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    gap: 12px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--color-primary);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-container span {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+/* ---- 没有更多数据提示样式 ---- */
+.no-more {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 0;
+    font-size: 14px;
+    color: var(--color-text-muted);
+}
+
+/* ---- 背景图容器 ---- */
+/* 页面级固定背景图，背景图片通过 scoped 样式或 inline style 设置 */
+.bg-image {
+    width: 100%;
+    height: 1500px;
+    position: fixed;
+    top: -10%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+}
+
+/* 背景图上层内容区 */
+.bg-content {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+}

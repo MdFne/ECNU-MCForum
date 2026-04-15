@@ -1,5 +1,5 @@
 <template>
-  <div class="bgIMG">
+  <div class="bg-image">
     <div class="forum-container">
       <div class="channels-sidebar">
         <h2>频道</h2>
@@ -238,12 +238,188 @@ const scrollToBottom = () => {
 </script>
 
 <style scoped>
-  @import '../styles/forum.css';
-  @import '../styles/chat.css';
-  @import '../styles/bgIMG.css';
-
-  .bgIMG {
+  .bg-image {
     background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
           url('../assets/ECNUSakura/2.png') center/cover no-repeat;
+  }
+
+  /* ---- 论坛容器布局 ---- */
+  .forum-container {
+    display: flex;
+    height: 85vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 95%;
+    border-radius: var(--radius-lg);
+  }
+
+  .channels-sidebar {
+    width: 20%;
+    background-color: var(--color-bg-light);
+    border-right: 1px solid var(--color-border);
+    padding: 20px;
+    overflow-y: auto;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+
+  .channels-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--color-text);
+  }
+
+  .channels-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  @media(max-width: 768px) {
+    .forum-container {
+      flex-direction: column;
+      height: auto;
+      width: auto;
+      padding: 0px;
+      margin: 0 5% 5% 5%;
+    }
+
+    .channels-sidebar {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 0;
+      border-radius: 6px 6px 0 0;
+      overflow-y: hidden;
+    }
+
+    .channels-sidebar h2 {
+      margin: 12px 0;
+    }
+
+    .channels-list {
+      flex-direction: row;
+      justify-content: space-evenly;
+    }
+  }
+
+  /* ---- 聊天页面 ---- */
+  .chat-page {
+    display: flex;
+    flex-direction: column;
+    height: 85vh;
+    width: 80%;
+    background-color: var(--color-bg-white);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+  }
+
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: 0 var(--radius-lg) 0 0;
+  }
+
+  .chat-header h2 {
+    margin: 0;
+  }
+
+  .back-btn {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .back-btn:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    background-color: white;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .message {
+    margin-bottom: 16px;
+    padding: 12px;
+    background-color: var(--color-bg-light);
+    border-radius: var(--radius-md);
+  }
+
+  .message-sender {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--color-primary);
+  }
+
+  .message-content {
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .message-time {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    text-align: right;
+  }
+
+  .chat-input {
+    display: flex;
+    padding: 16px;
+    background-color: white;
+    border-top: 1px solid var(--color-border);
+    border-radius: 0 0 var(--radius-lg) 0;
+  }
+
+  .chat-input input {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ced4da;
+    border-radius: var(--radius-sm);
+    margin-right: 12px;
+  }
+
+  .chat-input button {
+    padding: 0 24px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .chat-input button:hover {
+    background-color: #0069d9;
+  }
+
+  @media(max-width: 768px) {
+    .chat-page {
+      width: 100%;
+    }
+
+    .chat-header {
+      border-radius: 0;
+    }
+
+    .chat-page {
+      height: 75vh;
+    }
+
+    .chat-input {
+      border-radius: 0;
+      padding: 8px 4px;
+    }
+
+    .chat-input button {
+      padding: 8px 12px;
+    }
   }
 </style>

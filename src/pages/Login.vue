@@ -76,5 +76,47 @@ defineExpose({
 </script>
 
 <style scoped>
-@import '../styles/logBtn.css';
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 桌面端登录按钮样式 */
+.login-container > .el-button--primary {
+    --el-button-bg-color: transparent;
+    --el-button-border-color: transparent;
+    --el-button-hover-bg-color: rgba(255, 255, 255, 0.1);
+    --el-button-hover-border-color: transparent;
+    --el-button-active-bg-color: transparent;
+    --el-button-active-border-color: transparent;
+    /* padding: 0 30px; */
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    border-radius: 0;
+    height: 3rem;
+    width: 4rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 桌面端注册按钮样式 */
+.login-container > .el-button {
+    --el-button-bg-color: transparent;
+    --el-button-border-color: transparent;
+    --el-button-hover-bg-color: rgba(255, 255, 255, 0.1);
+    --el-button-hover-border-color: transparent;
+    padding: 0 30px;
+    font-size: 20px;
+    border-radius: 0;
+    height: 4rem;
+    width: 4rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 </style>

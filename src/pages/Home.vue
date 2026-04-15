@@ -70,7 +70,7 @@ const handleScroll = () => {
 // 视差滚动
 const parallaxScroll = () => {
   const scrollTop = window.scrollY
-  const bg = document.querySelector('.bgIMG')
+  const bg = document.querySelector('.bg-image')
   
   // 慢速移动：scrollY * 0.3
   bg.style.transform = `translateY(${scrollTop * -0.3}px)`
@@ -89,8 +89,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="bg-box">
-    <div class="bgIMG"></div>
+  <div class="bg-content">
+    <div class="bg-image"></div>
     <div class="main">
     <Activity />
       <div class="container">
@@ -124,20 +124,17 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style scoped> 
-  @import '../styles/homeLoading.css';
-  @import '../styles/bgIMG.css';
-  
+<style scoped>
   .main {
     height: 100%;
-    width: min(80%,900px);
+    width: min(80%, 900px);
     margin: 0;
-    
+
     display: flex;
     flex-direction: column;
     gap: 16px;
   }
-  
+
   .container {
     height: 100%;
     width: 100%;
@@ -145,7 +142,7 @@ onUnmounted(() => {
     flex-direction: row;
     gap: 16px;
   }
-    
+
   .content {
     height: auto;
 
@@ -155,9 +152,14 @@ onUnmounted(() => {
     gap: 20px;
     padding: 20px;
 
-    background-color: #F1F1F1;
+    background-color: var(--color-bg-lighter);
     box-shadow: var(--el-box-shadow-light);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
+  }
+
+  .bg-image {
+    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+          url('../assets/ECNUSakura/3.png') center/cover no-repeat;
   }
 
   @media(max-width: 768px) {

@@ -1,0 +1,223 @@
+/* ============================================================
+   element-overrides.css — Element Plus 组件样式覆盖
+   按 EP 组件分组，集中管理所有全局覆盖。
+   注意：此文件作为全局样式加载，不需要 :deep() 穿透。
+   ============================================================ */
+
+/* ---- el-menu（头部导航栏） ---- */
+/* 透明背景适配深色头部 */
+.header .el-menu {
+    --el-menu-bg-color: transparent;
+    --el-menu-border-color: transparent;
+    --el-menu-hover-bg-color: rgba(255, 255, 255, 0.1);
+    --el-menu-text-color: #fff;
+    --el-menu-active-color: #fff;
+    width: 100%;
+    height: 3.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header .el-menu-item {
+    --el-menu-item-hover-bg-color: rgba(255, 255, 255, 0.1);
+    --el-menu-item-text-color: #fff;
+    --el-menu-item-active-bg-color: rgba(36, 36, 36, 0.797);
+    --el-menu-item-active-border-color: rgba(255, 255, 255, 0.3);
+    padding: 0 30px;
+    font-size: 16px;
+    height: 3.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 1150px) {
+    .header .el-menu {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        justify-content: flex-start;
+    }
+
+    .header .el-menu-item {
+        font-size: 12px;
+        padding: 0 16px;
+        margin: 0;
+    }
+}
+
+/* ---- el-dialog（弹窗） ---- */
+.el-dialog {
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+}
+
+.el-dialog__header {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    background-color: #bfbfbf;
+    position: relative;
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+}
+
+.el-dialog__title {
+    font-size: 24px;
+    font-weight: 500;
+    padding: 0;
+    line-height: 100px;
+}
+
+/* 修改弹窗内的关闭按钮 */
+.el-dialog__headerbtn {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.el-dialog__headerbtn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.el-dialog__close {
+    color: #606266;
+    font-size: 36px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close {
+    color: var(--color-primary);
+}
+
+.el-dialog__body {
+    padding: 40px 60px;
+    font-size: 16px;
+}
+
+/* 弹窗内的主按钮 */
+.el-dialog .el-button--primary {
+    --el-button-bg-color: #165DFF;
+    --el-button-border-color: #165DFF;
+    --el-button-hover-bg-color: #4080FF;
+    --el-button-hover-border-color: #4080FF;
+    height: 54px;
+    font-size: 24px;
+    border-radius: var(--radius-sm);
+    z-index: 2999;
+}
+
+.el-overlay-dialog {
+    padding: 0;
+    z-index: 2000;
+}
+
+/* ---- el-input（输入框） ---- */
+.el-input__wrapper {
+    --el-input-bg-color: #f5f7fa;
+    --el-input-border-color: #dcdfe6;
+    --el-input-focus-border-color: var(--color-primary);
+    --el-input-hover-border-color: #c0c4cc;
+    border-radius: var(--radius-sm);
+    padding: 0 12px;
+    height: 54px;
+}
+
+.el-input__inner {
+    font-size: 16px;
+    color: #303133;
+}
+
+/* ---- el-form（表单） ---- */
+/* 设置表单项的高度和间隔 */
+.el-form-item {
+    margin-right: 0;
+    margin-bottom: 36px;
+}
+
+.el-form-item:last-child {
+    margin-bottom: 0;
+}
+
+.el-form-item__error {
+    color: #f56c6c;
+    font-size: 16px;
+    line-height: 1;
+    padding-top: 4px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+}
+
+.el-form-item.is-error .el-input__wrapper {
+    border-color: #f56c6c;
+    box-shadow: 0 0 0 1px #f56c6c inset;
+}
+
+.el-form-item.is-error .el-input__wrapper:hover {
+    border-color: #f56c6c;
+}
+
+.el-form-item.is-error .el-input__wrapper:focus-within {
+    border-color: #f56c6c;
+    box-shadow: 0 0 0 1px #f56c6c inset;
+}
+
+/* ---- 移动端适配 ---- */
+@media (max-width: 768px) {
+    .el-dialog {
+        width: 80% !important;
+        margin: 0 auto;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        display: block !important;
+    }
+
+    .el-dialog__header {
+        height: 80px;
+    }
+
+    .el-dialog__title {
+        font-size: 20px;
+        line-height: 80px;
+    }
+
+    .el-dialog__body {
+        padding: 20px 30px;
+    }
+
+    .el-dialog__headerbtn {
+        width: 32px;
+        height: 32px;
+    }
+
+    .el-dialog__close {
+        font-size: 28px;
+    }
+
+    .el-input__wrapper {
+        height: 48px;
+    }
+
+    .el-dialog .el-button--primary {
+        height: 48px;
+        font-size: 16px;
+    }
+}

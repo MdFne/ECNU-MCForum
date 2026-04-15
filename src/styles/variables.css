@@ -1,0 +1,136 @@
+/* ============================================================
+   variables.css — CSS 自定义属性（颜色、间距、字体、阴影、圆角）
+   所有全局样式变量集中在此文件，组件通过 var() 引用。
+   ============================================================ */
+
+:root {
+  /* ---- 字体 ---- */
+  --font-sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, Consolas, monospace;
+
+  /* ---- 基础颜色（通用 UI） ---- */
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --social-bg: rgba(244, 243, 236, 0.5);
+
+  /* ---- 强调色 ---- */
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+
+  /* ---- 语义化颜色 ---- */
+  /* 主色（与 Element Plus 一致的蓝色系） */
+  --color-primary: #409eff;
+  --color-primary-hover: #66b1ff;
+  --color-primary-active: #4080FF;
+  --color-primary-dark: #165DFF;
+
+  /* 文本 */
+  --color-text: #333333;
+  --color-text-secondary: #6c757d;
+  --color-text-muted: #999999;
+
+  /* 背景 */
+  --color-bg-white: #ffffff;
+  --color-bg-light: #f8f9fa;
+  --color-bg-lighter: #f0f2f5;
+  --color-bg-hover: #e9ecef;
+
+  /* 边框 */
+  --color-border: #dee2e6;
+
+  /* 功能色 */
+  --color-success: #4CAF50;
+  --color-danger: #f44336;
+  --color-info: #2196F3;
+  --color-warning: #e6a23c;
+
+  /* 状态色 */
+  --color-online-bg: #d4edda;
+  --color-online-text: #155724;
+  --color-online-border: #c3e6cb;
+  --color-offline-bg: #f8d7da;
+  --color-offline-text: #721c24;
+  --color-offline-border: #f5c6cb;
+
+  /* ---- 阴影 ---- */
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.15);
+
+  /* ---- 圆角 ---- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* ---- 间距 ---- */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+
+  /*
+    响应式断点约定（CSS 自定义属性不能用于 @media，此处仅作文档）
+    --breakpoint-sm:  480px   小手机
+    --breakpoint-md:  768px   平板竖屏（主要断点）
+    --breakpoint-lg:  1024px  平板横屏
+    --breakpoint-xl:  1150px  小桌面
+  */
+}
+
+/* ---- 暗色主题（暂时禁用，待正式实现时取消注释） ---- */
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #dedede;
+    --title-bg: #28292a;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --social-bg: rgba(47, 48, 58, 0.5);
+
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+
+    --color-primary: #66b1ff;
+    --color-primary-hover: #8cc5ff;
+    --color-primary-active: #4080FF;
+    --color-primary-dark: #4d7fff;
+
+    --color-text: #e5e5e5;
+    --color-text-secondary: #9ca3af;
+    --color-text-muted: #6b7280;
+
+    --color-bg-white: #1f2937;
+    --color-bg-light: #374151;
+    --color-bg-lighter: #1f2937;
+    --color-bg-hover: #4b5563;
+
+    --color-border: #4b5563;
+
+    --color-online-bg: #1a3a2a;
+    --color-online-text: #6ee7b7;
+    --color-online-border: #2d5a3d;
+    --color-offline-bg: #3a1a1a;
+    --color-offline-text: #fca5a5;
+    --color-offline-border: #5a2d2d;
+
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
+      rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+*/
