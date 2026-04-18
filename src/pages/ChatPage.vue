@@ -1,5 +1,6 @@
 <template>
-  <div class="bg-image">
+  <div class="bg-content">
+    <div class="bg-image"></div>
     <div class="forum-container">
       <div class="channels-sidebar">
         <h2>频道</h2>

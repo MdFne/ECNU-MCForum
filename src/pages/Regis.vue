@@ -33,7 +33,10 @@
 
 <script setup>
 import { ref, reactive, defineExpose } from 'vue'
+import { useUserStore } from '../stores/user'
+import { ElMessage } from 'element-plus'
 
+const userStore = useUserStore()
 const dialogVisible = ref(false)
 const loading = ref(false)
 const loginFormRef = ref(null)
@@ -70,20 +73,25 @@ const rules = {
 
 const handleLogin = async () => {
   if (!loginFormRef.value) return
-  
+
   try {
     await loginFormRef.value.validate()
     loading.value = true
-    
-    // 模拟登录请求
-    setTimeout(() => {
-      loading.value = false
-      dialogVisible.value = false
-      console.log('登录成功:', loginForm)
-      // 这里可以添加登录成功后的逻辑，比如存储token等
-    }, 1000)
+
+    // 调用 Pinia store 的 register 方法
+    await userStore.register(loginForm.username, loginForm.email, loginForm.password)
+    ElMessage.success('注册成功')
+    dialogVisible.value = false
+
+    // 清空表单
+    loginForm.username = ''
+    loginForm.email = ''
+    loginForm.password = ''
+    loginForm.confirmPassword = ''
   } catch (error) {
-    console.error('登录失败:', error)
+    console.error('注册失败:', error)
+  } finally {
+    loading.value = false
   }
 }
 

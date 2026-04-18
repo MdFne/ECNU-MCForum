@@ -10,17 +10,29 @@
         <el-menu-item index="/">首页</el-menu-item>
         <el-menu-item index="/forum">论坛</el-menu-item>
         <el-menu-item index="/stats">统计</el-menu-item>
-        <el-menu-item index="/profile">个人中心</el-menu-item>
       </el-menu>
     </div>
     <div class="user">
-      <div class="avatar">
+      <!-- 已登录：显示头像和用户中心按钮 -->
+      <template v-if="userStore.isLoggedIn">
+        <div class="avatar" @click="navigateTo('/profile')" style="cursor: pointer;">
+          <img :src="userStore.avatar || defaultAvatar" alt="avatar" />
+        </div>
+        <!-- <span class="username" @click="navigateTo('/profile')">{{ userStore.username }}</span> -->
+      </template>
+      <!-- 未登录：显示默认头像 -->
+      <div class="avatar" v-else>
         <img src="../assets/avatar.webp" alt="avatar" />
       </div>
-      <!-- 桌面端显示的登录注册按钮 -->
+      <!-- 桌面端：未登录显示登录注册按钮，已登录显示个人中心按钮 -->
       <div class="auth-buttons">
-        <Login ref="loginRef" />
-        <Regis ref="regisRef" />
+        <template v-if="!userStore.isLoggedIn">
+          <Login ref="loginRef" />
+          <Regis ref="regisRef" />
+        </template>
+        <template v-else>
+          <button class="profile-btn" @click="navigateTo('/profile')">个人中心</button>
+        </template>
       </div>
       <!-- 移动端显示的汉堡菜单 -->
       <div class="mobile-menu">
@@ -42,11 +54,19 @@
         <div class="nav-item" @click="navigateTo('/')" :class="{ active: activeIndex === '/' }">首页</div>
         <div class="nav-item" @click="navigateTo('/forum')" :class="{ active: activeIndex === '/forum' }">论坛</div>
         <div class="nav-item" @click="navigateTo('/stats')" :class="{ active: activeIndex === '/stats' }">统计</div>
-        <div class="nav-item" @click="navigateTo('/profile')" :class="{ active: activeIndex === '/profile' }">个人中心</div>
       </div>
-      <div class="sidebar-auth">
+      <!-- 未登录：显示登录注册按钮 -->
+      <div class="sidebar-auth" v-if="!userStore.isLoggedIn">
         <button class="auth-btn login-btn" @click="openLogin">登录</button>
         <button class="auth-btn register-btn" @click="openRegister">注册</button>
+      </div>
+      <!-- 已登录：显示用户信息和退出按钮 -->
+      <div class="sidebar-auth" v-else>
+        <div class="sidebar-user-info">
+          <span>{{ userStore.username }}</span>
+        </div>
+        <button class="auth-btn login-btn" @click="navigateTo('/profile')">个人中心</button>
+        <button class="auth-btn register-btn" @click="handleLogout">退出登录</button>
       </div>
     </div>
     
@@ -60,17 +80,27 @@
   import { useRouter, useRoute } from 'vue-router'
   import Login from '../pages/Login.vue'
   import Regis from '../pages/Regis.vue'
-  
+  import { useUserStore } from '../stores/user'
+  import { ElMessage } from 'element-plus'
+
   const router = useRouter()
   const route = useRoute()
+  const userStore = useUserStore()
   const activeIndex = ref('/')
   const loginRef = ref(null)
   const regisRef = ref(null)
   const sidebarOpen = ref(false)
+
+  // 默认头像
+  const defaultAvatar = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar%20simple%20design&image_size=square'
   
   // 初始化时根据当前路由设置activeIndex
-  onMounted(() => {
+  onMounted(async () => {
     activeIndex.value = route.path
+    // 如果本地有 token，校验是否仍然有效
+    if (userStore.isLoggedIn && userStore.token) {
+      await userStore.fetchProfile()
+    }
   })
   
   // 监听路由变化，更新activeIndex
@@ -103,6 +133,18 @@
     if (regisRef.value) {
       regisRef.value.openDialog()
       sidebarOpen.value = false
+    }
+  }
+
+  // 退出登录
+  const handleLogout = async () => {
+    try {
+      await userStore.logout()
+      ElMessage.success('已退出登录')
+      sidebarOpen.value = false
+      router.push('/')
+    } catch (error) {
+      console.error('退出登录失败:', error)
     }
   }
 </script>
@@ -228,6 +270,47 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* 已登录时的用户名显示 */
+.username {
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.username:hover {
+    color: var(--color-primary);
+}
+
+/* 个人中心按钮样式 */
+.profile-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    height: 3rem;
+    padding: 0 16px;
+    border-radius: 0;
+    transition: background-color 0.3s;
+}
+
+.profile-btn:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 移动端侧边栏用户信息 */
+.sidebar-user-info {
+    text-align: center;
+    padding: 10px 0;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
 }
 
 /* 侧边栏样式 */
