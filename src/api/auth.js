@@ -20,3 +20,9 @@ export const getProfileApi = () => {
 export const logoutApi = () => {
   return request.post('/auth/logout')
 }
+
+// 刷新 Token（不用 request 实例，避免触发拦截器循环）
+import axios from 'axios'
+export const refreshTokenApi = (refreshToken) => {
+  return axios.post('http://localhost:3000/api/auth/refresh', { refreshToken })
+}

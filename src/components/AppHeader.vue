@@ -16,7 +16,7 @@
       <!-- 已登录：显示头像和用户中心按钮 -->
       <template v-if="userStore.isLoggedIn">
         <div class="avatar" @click="navigateTo('/profile')" style="cursor: pointer;">
-          <img :src="userStore.avatar || defaultAvatar" alt="avatar" />
+          <img :src="avatarUrl" alt="avatar" />
         </div>
         <!-- <span class="username" @click="navigateTo('/profile')">{{ userStore.username }}</span> -->
       </template>
@@ -76,7 +76,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, onUnmounted, watch } from 'vue'
+  import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
   import { useRouter, useRoute } from 'vue-router'
   import Login from '../pages/Login.vue'
   import Regis from '../pages/Regis.vue'
@@ -93,6 +93,14 @@
 
   // 默认头像
   const defaultAvatar = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar%20simple%20design&image_size=square'
+
+  // 计算头像URL：如果是本地上传的头像（/uploads/开头），拼接后端地址
+  const avatarUrl = computed(() => {
+    const avatar = userStore.avatar
+    if (!avatar) return defaultAvatar
+    if (avatar.startsWith('/uploads/')) return 'http://localhost:3000' + avatar
+    return avatar
+  })
   
   // 初始化时根据当前路由设置activeIndex
   onMounted(async () => {
@@ -225,7 +233,7 @@
 }
 
 .avatar {
-    margin-right: 16px;
+    margin-right: 4px;
     display: flex;
     align-items: center;
     height: 3rem;
@@ -233,7 +241,9 @@
 
 .avatar img {
     height: 2rem;
+    width: 2rem;
     border-radius: 50%;
+    object-fit: cover;
 }
 
 .mobile-menu {
@@ -269,7 +279,7 @@
 .auth-buttons {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
 }
 
 /* 已登录时的用户名显示 */
@@ -468,5 +478,58 @@
     .nav {
         display: none;
     }
+}
+
+/* ---- Element Plus 菜单样式覆盖 ---- */
+
+/* 去掉默认背景和边框 */
+.nav :deep(.el-menu) {
+    background-color: transparent;
+    border-bottom: none !important;
+}
+
+.nav :deep(.el-menu-item) {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    color: rgba(255, 255, 255, 0.7);
+    position: relative;
+    transition: color 0.3s, background-color 0.3s;
+    height: 3rem;
+    line-height: 3rem;
+}
+
+/* 底部横线：默认宽度为0，居中对齐 */
+.nav :deep(.el-menu-item)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-bg-hover);
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+/* hover: 灰色底色 + 横线从中间向两边展开 */
+.nav :deep(.el-menu-item:hover) {
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    color: #fff;
+}
+
+.nav :deep(.el-menu-item:hover)::after {
+    width: 60%;
+    left: 20%;
+}
+
+/* 选中状态：横线常驻 */
+.nav :deep(.el-menu-item.is-active) {
+    color: #fff !important;
+    background-color: transparent !important;
+    border-bottom: none !important;
+}
+
+.nav :deep(.el-menu-item.is-active)::after {
+    width: 60%;
+    left: 20%;
 }
 </style>

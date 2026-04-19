@@ -142,7 +142,7 @@ defineExpose({
     font-size: 20px;
     border-radius: 0;
     height: 4rem;
-    width: 4rem;
+    width: 3rem;
     margin: 0;
     display: flex;
     align-items: center;

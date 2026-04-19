@@ -129,32 +129,39 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { onMounted, onUnmounted } from 'vue';
+import { useUserStore } from '../stores/user';
+import { ElMessage } from 'element-plus';
 
 const router = useRouter();
+const userStore = useUserStore();
 const fileInput = ref(null);
 
 // 问候语
 const greeting = ref('你好');
 const currentTime = ref(null);
-const loginInterval = ref('21');
+const loginInterval = ref('');
 
 // 时钟贴图文件
 const clockImage = ref(
   new URL(`../assets/clock/1.png`, import.meta.url).href
 );
 
-// 模拟用户数据
-const user = reactive({
-  id: '10001',
-  username: '用户123',
-  avatar: '',
-  school: '华东师范大学',
-  age: 20,
-  registerDate: '2024-01-01'
-});
+// 后端服务器地址（用于拼接头像等静态资源路径）
+const API_BASE = 'http://localhost:3000';
+
+// 从 userStore 获取用户数据（计算属性，保持响应式）
+const user = computed(() => ({
+  id: userStore.userId,
+  username: userStore.username,
+  avatar: userStore.avatar ? API_BASE + userStore.avatar : '',
+  school: userStore.school,
+  age: userStore.age,
+  email: userStore.email,
+  registerDate: userStore.createdAt ? new Date(userStore.createdAt).toLocaleDateString() : '未知'
+}));
 
 const defaultAvatar = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar%20simple%20design&image_size=square';
 
@@ -163,6 +170,12 @@ const editUsername = ref(false);
 const editSchool = ref(false);
 const editAge = ref(false);
 const showChangePassword = ref(false);
+
+// 保存loading状态
+const savingUsername = ref(false);
+const savingSchool = ref(false);
+const savingAge = ref(false);
+const savingPassword = ref(false);
 
 // 表单数据
 const newUsername = ref('');
@@ -202,11 +215,14 @@ const updateTime = () => {
 
 // 获取登录间隔
 const updateLoginInterval = () => {
-  let lastTime = new Date(2025, 0, 12, 22, 19, 35).getTime();
-  let now = new Date().getTime();
-  // console.log(lastTime, now);
-  let interval = now - lastTime;
-  loginInterval.value = formatTimestamp(interval);
+  if (userStore.lastLoginAt) {
+    let lastTime = new Date(userStore.lastLoginAt).getTime();
+    let now = new Date().getTime();
+    let interval = now - lastTime;
+    loginInterval.value = formatTimestamp(interval);
+  } else {
+    loginInterval.value = '未知';
+  }
 }
 
 // 格式化时间戳
@@ -235,40 +251,92 @@ const triggerFileInput = () => {
 };
 
 // 处理头像上传
-const handleAvatarUpload = (event) => {
+const uploadingAvatar = ref(false);
+
+const handleAvatarUpload = async (event) => {
   const file = event.target.files[0];
-  if (file) {
-    // 这里可以添加上传逻辑
-    console.log('上传头像:', file);
-    // 模拟上传成功
-    user.avatar = URL.createObjectURL(file);
+  if (!file) return;
+
+  // 前端校验文件类型
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+  if (!allowedTypes.includes(file.type)) {
+    ElMessage.warning('只支持 JPG、PNG、GIF、WebP 格式的图片');
+    return;
+  }
+
+  // 前端校验文件大小（2MB）
+  if (file.size > 2 * 1024 * 1024) {
+    ElMessage.warning('图片大小不能超过 2MB');
+    return;
+  }
+
+  uploadingAvatar.value = true;
+  try {
+    await userStore.uploadAvatar(file);
+    ElMessage.success('头像上传成功');
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || '头像上传失败');
+  } finally {
+    uploadingAvatar.value = false;
+    // 清空 input 以便重复选择同一文件
+    event.target.value = '';
   }
 };
 
 // 保存用户名
-const saveUsername = () => {
-  if (newUsername.value) {
-    user.username = newUsername.value;
+const saveUsername = async () => {
+  if (!newUsername.value || !newUsername.value.trim()) {
+    ElMessage.warning('用户名不能为空');
+    return;
+  }
+  savingUsername.value = true;
+  try {
+    await userStore.updateProfile({ username: newUsername.value.trim() });
+    ElMessage.success('用户名修改成功');
     editUsername.value = false;
     newUsername.value = '';
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || '修改失败');
+  } finally {
+    savingUsername.value = false;
   }
 };
 
 // 保存学校
-const saveSchool = () => {
-  if (newSchool.value) {
-    user.school = newSchool.value;
+const saveSchool = async () => {
+  if (!newSchool.value || !newSchool.value.trim()) {
+    ElMessage.warning('学校不能为空');
+    return;
+  }
+  savingSchool.value = true;
+  try {
+    await userStore.updateProfile({ school: newSchool.value.trim() });
+    ElMessage.success('学校修改成功');
     editSchool.value = false;
     newSchool.value = '';
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || '修改失败');
+  } finally {
+    savingSchool.value = false;
   }
 };
 
 // 保存年龄
-const saveAge = () => {
-  if (newAge.value) {
-    user.age = parseInt(newAge.value);
+const saveAge = async () => {
+  if (!newAge.value) {
+    ElMessage.warning('年龄不能为空');
+    return;
+  }
+  savingAge.value = true;
+  try {
+    await userStore.updateProfile({ age: parseInt(newAge.value) });
+    ElMessage.success('年龄修改成功');
     editAge.value = false;
     newAge.value = '';
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || '修改失败');
+  } finally {
+    savingAge.value = false;
   }
 };
 
@@ -278,29 +346,53 @@ const changePassword = () => {
 };
 
 // 保存密码
-const savePassword = () => {
-  // 这里可以添加密码修改逻辑
-  console.log('修改密码:', oldPassword.value, newPasswordInput.value, confirmPassword.value);
-  // 模拟修改成功
-  showChangePassword.value = false;
-  oldPassword.value = '';
-  newPasswordInput.value = '';
-  confirmPassword.value = '';
+const savePassword = async () => {
+  if (!oldPassword.value || !newPasswordInput.value || !confirmPassword.value) {
+    ElMessage.warning('请填写所有密码字段');
+    return;
+  }
+  if (newPasswordInput.value !== confirmPassword.value) {
+    ElMessage.warning('两次输入的新密码不一致');
+    return;
+  }
+  if (newPasswordInput.value.length < 6) {
+    ElMessage.warning('新密码长度至少6位');
+    return;
+  }
+  savingPassword.value = true;
+  try {
+    await userStore.changePassword({
+      oldPassword: oldPassword.value,
+      newPassword: newPasswordInput.value
+    });
+    ElMessage.success('密码修改成功');
+    showChangePassword.value = false;
+    oldPassword.value = '';
+    newPasswordInput.value = '';
+    confirmPassword.value = '';
+  } catch (error) {
+    ElMessage.error(error.response?.data?.message || '密码修改失败');
+  } finally {
+    savingPassword.value = false;
+  }
 };
 
 // 退出登录
-const logout = () => {
-  // 这里可以添加退出登录逻辑
-  console.log('退出登录');
-  // 模拟退出登录成功
-  router.push('/login');
+const logout = async () => {
+  try {
+    await userStore.logout()
+    ElMessage.success('已退出登录')
+    router.push('/')
+  } catch (error) {
+    console.error('退出登录失败:', error)
+  }
 };
 
 // 视差滚动
 const parallaxScroll = () => {
   const scrollTop = window.scrollY
   const bg = document.querySelector('.bg-image')
-  
+
   // 慢速移动：scrollY * 0.3
   bg.style.transform = `translateY(${scrollTop * -0.3}px)`
 }
@@ -309,9 +401,13 @@ const parallaxScroll = () => {
 let clockTimer = null;
 
 // 页面加载时设置问候语
-onMounted(() => {
+onMounted(async () => {
   setGreeting();
   updateTime();
+  // 如果 userStore 中没有详细信息，从服务器拉取
+  if (userStore.isLoggedIn && !userStore.school) {
+    await userStore.fetchProfile();
+  }
   updateLoginInterval();
   window.addEventListener('scroll', parallaxScroll);
 
