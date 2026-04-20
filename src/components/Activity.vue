@@ -1,6 +1,6 @@
 <template>
   <div class="roll">
-    <el-carousel height="300px" :interval="3000" indicator-position="inside">
+    <el-carousel :height="carouselHeight" :interval="3000" indicator-position="inside">
       <el-carousel-item v-for="(item, index) in carouselItems" :key="item._id || index">
         <a :href="item.linkUrl || '#'" :target="item.linkUrl ? '_blank' : '_self'" class="carousel-link">
           <div class="carousel-item" :style="`background-image: url(${item.imageUrl});`" :title="item.title">
@@ -23,11 +23,18 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, computed, onMounted, onUnmounted } from 'vue'
   import { getActiveCarousels } from '../api/carousel'
   import { ElMessage } from 'element-plus'
 
   const carouselItems = ref([])
+  const isMobile = ref(window.innerWidth <= 768)
+
+  const carouselHeight = computed(() => isMobile.value ? '200px' : '300px')
+
+  const onResize = () => {
+    isMobile.value = window.innerWidth <= 768
+  }
 
   const fetchCarousels = async () => {
     try {
@@ -43,6 +50,11 @@
 
   onMounted(() => {
     fetchCarousels()
+    window.addEventListener('resize', onResize)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', onResize)
   })
 </script>
 
@@ -51,10 +63,6 @@
     border-radius: 8px; /* 增加一点圆角 */
     overflow: hidden;
     box-shadow: var(--el-box-shadow-light);
-
-    @media (max-width: 768px) {
-      height: 200px;
-    }
   }
 
   .carousel-link {
@@ -82,6 +90,7 @@
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
     color: #fff;
     text-align: left;
+    box-sizing: border-box;
   }
 
   .carousel-info h3 {
@@ -107,5 +116,21 @@
     color: #909399;
     font-size: 1.2rem;
     align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .carousel-info {
+      padding: 12px 16px;
+    }
+
+    .carousel-info h3 {
+      font-size: 1rem;
+    }
+
+    .carousel-info p {
+      margin: 4px 0 8px 0;
+      font-size: 0.8rem;
+      -webkit-line-clamp: 1;
+    }
   }
 </style>

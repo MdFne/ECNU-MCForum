@@ -25,7 +25,7 @@ const props = defineProps({
 const router = useRouter()
 
 const navigateToChat = () => {
-  router.push({ name: 'chat', params: { channelId: props.channel.id } })
+  router.push(`/forum/${props.channel.id}`)
 }
 </script>
 
