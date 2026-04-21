@@ -95,9 +95,10 @@ onUnmounted(() => {
     <Activity />
       <div class="container">
         <div class="content">
-          <PostCard 
-            v-for="activity in activities" 
+          <PostCard
+            v-for="activity in activities"
             :key="activity._id"
+            :id="activity._id"
             :title="activity.title"
             :summary="activity.summary"
             :coverImage="activity.coverImage"
@@ -127,7 +128,7 @@ onUnmounted(() => {
 <style scoped>
   .main {
     height: 100%;
-    width: min(80%, 900px);
+    width: min(80%, 1200px);
     margin: 0;
 
     display: flex;

@@ -30,7 +30,7 @@
   const carouselItems = ref([])
   const isMobile = ref(window.innerWidth <= 768)
 
-  const carouselHeight = computed(() => isMobile.value ? '200px' : '300px')
+  const carouselHeight = computed(() => isMobile.value ? '200px' : '320px')
 
   const onResize = () => {
     isMobile.value = window.innerWidth <= 768

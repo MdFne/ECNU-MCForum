@@ -3,6 +3,7 @@ import Home from '../pages/Home.vue'
 import Forum from '../pages/Forum.vue'
 import Profile from '../pages/Profile.vue'
 import Stats from '../pages/Stats.vue'
+import PostDetail from '../pages/PostDetail.vue'
 
 const route = [
     {
@@ -19,6 +20,11 @@ const route = [
         path: '/forum/:channelId',
         name: 'ForumChannel',
         component: Forum
+    },
+    {
+        path: '/post/:id',
+        name: 'PostDetail',
+        component: PostDetail
     },
     {
         path: '/profile',

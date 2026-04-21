@@ -1,7 +1,14 @@
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps({
+  id: {
+    type: String,
+    default: ''
+  },
   title: {
     type: String,
     required: true
@@ -38,10 +45,17 @@ const formattedDate = computed(() => {
   const date = new Date(props.publishDate)
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 })
+
+// 点击跳转文章详情
+const goToDetail = () => {
+  if (props.id) {
+    router.push(`/post/${props.id}`)
+  }
+}
 </script>
 
 <template>
-  <div class="post-card">
+  <div class="post-card" @click="goToDetail" style="cursor: pointer;">
     <div class="card-image" v-if="coverImage">
       <img :src="coverImage" :alt="title">
     </div>
