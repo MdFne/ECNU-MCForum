@@ -18,7 +18,12 @@
       <!-- 文章内容 -->
       <article v-else-if="article" class="article">
         <!-- 返回按钮 -->
-        <button class="back-btn" @click="goBack">← 返回</button>
+        <button class="back-btn" @click="goBack"> 
+          <span>←</span> 返回
+        </button>
+
+        <!-- 分割线 -->
+        <hr class="article-hr">
 
         <!-- 文章头部 -->
         <header class="article-header">
@@ -180,17 +185,30 @@ onUnmounted(() => {
 
 /* ---- 返回按钮 ---- */
 .back-btn {
+  position: relative;
+  left: -46%;
   background: none;
   border: none;
   color: var(--color-primary);
-  font-size: 15px;
+  font-size: 16px;
   cursor: pointer;
   padding: 8px 0;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
+}
+
+.back-btn span {
+  position: relative;
+  top: -2px;
 }
 
 .back-btn:hover {
-  text-decoration: underline;
+  /* text-decoration: underline; */
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.article-hr {
+  margin: 8px 0 12px 0;
 }
 
 /* ---- 文章容器 ---- */
@@ -198,7 +216,7 @@ onUnmounted(() => {
   background: var(--color-bg-white);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
-  padding: 32px 40px;
+  padding: 16px 36px 24px 36px;
 }
 
 /* ---- 文章头部 ---- */
@@ -247,8 +265,12 @@ onUnmounted(() => {
 }
 
 .meta-item .el-icon {
-  font-size: 15px;
+  font-size: 18px;
 }
+
+/* .meta-item #text {
+  line-height: 26px;
+} */
 
 /* ---- 封面图 ---- */
 .article-cover {

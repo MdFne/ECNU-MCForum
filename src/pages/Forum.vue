@@ -15,7 +15,7 @@
       </div>
 
       <!-- 未选择频道：占位提示 -->
-      <div v-if="!channelId" class="chat-content">
+      <div v-if="!channelId" class="chat-content glass">
         <h2>选择一个频道开始聊天</h2>
         <p>点击左侧频道进入对应的聊天室</p>
       </div>
@@ -29,7 +29,7 @@
           </span>
         </div>
 
-        <div class="chat-messages" ref="messagesContainer">
+        <div class="chat-messages glass" ref="messagesContainer">
           <!-- 上拉加载更多 -->
           <div v-if="forumStore.hasMore" class="load-more" @click="loadMore">
             加载更多消息
@@ -282,7 +282,7 @@ onUnmounted(() => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--color-bg-white);
+    /* background-color: var(--color-bg-white); */
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   }
 
@@ -336,7 +336,7 @@ onUnmounted(() => {
     flex: 1;
     padding: 16px;
     overflow-y: auto;
-    background-color: white;
+    /* background-color: white; */
     border-bottom: 1px solid var(--color-border);
   }
 

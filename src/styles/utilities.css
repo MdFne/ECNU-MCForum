@@ -43,6 +43,14 @@
     color: var(--color-text-muted);
 }
 
+/* ---- 毛玻璃效果 ---- */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
 /* ---- 背景图容器 ---- */
 /* 页面级固定背景图，背景图片通过 scoped 样式或 inline style 设置 */
 .bg-image {

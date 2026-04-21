@@ -94,7 +94,7 @@ onUnmounted(() => {
     <div class="main">
     <Activity />
       <div class="container">
-        <div class="content">
+        <div class="content glass">
           <PostCard
             v-for="activity in activities"
             :key="activity._id"
@@ -153,7 +153,7 @@ onUnmounted(() => {
     gap: 20px;
     padding: 20px;
 
-    background-color: var(--color-bg-lighter);
+    /* background-color: var(--color-bg-lighter); */
     box-shadow: var(--el-box-shadow-light);
     border-radius: var(--radius-md);
   }

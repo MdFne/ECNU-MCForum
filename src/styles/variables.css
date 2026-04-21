@@ -72,6 +72,11 @@
   --radius-md: 8px;
   --radius-lg: 12px;
 
+  /* ---- 毛玻璃 ---- */
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-blur: 12px;
+  --glass-border: rgba(255, 255, 255, 0.3);
+
   /* ---- 间距 ---- */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
@@ -133,6 +138,10 @@
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 5px 20px rgba(0, 0, 0, 0.4);
+
+    --glass-bg: rgba(30, 30, 30, 0.6);
+    --glass-blur: 12px;
+    --glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 */

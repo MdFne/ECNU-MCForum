@@ -50,7 +50,7 @@ import biliIcon from '../assets/linkIcon/bilibili.png'
 
 <style scoped>
   .sidebar-bar {
-    height: 80vh;
+    height: 40rem;
     width: 18rem;
     background-color: #f5f5f5;
     box-shadow: var(--el-box-shadow-light);
