@@ -629,6 +629,7 @@ onUnmounted(() => {
 
   .modal-content input {
     width: 100%;
+    box-sizing: border-box;
     padding: 0.8rem;
     margin-bottom: 1rem;
     border: 1px solid #ddd;

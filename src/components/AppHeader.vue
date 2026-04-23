@@ -91,6 +91,10 @@
   const regisRef = ref(null)
   const sidebarOpen = ref(false)
 
+  // 监听登录/注册互跳事件
+  const onOpenLogin = () => openLogin()
+  const onOpenRegister = () => openRegister()
+
   // 默认头像
   const defaultAvatar = 'https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=default%20user%20avatar%20simple%20design&image_size=square'
 
@@ -109,6 +113,13 @@
     if (userStore.isLoggedIn && userStore.token) {
       await userStore.fetchProfile()
     }
+    window.addEventListener('open-login', onOpenLogin)
+    window.addEventListener('open-register', onOpenRegister)
+  })
+
+  onUnmounted(() => {
+    window.removeEventListener('open-login', onOpenLogin)
+    window.removeEventListener('open-register', onOpenRegister)
   })
   
   // 监听路由变化，更新activeIndex

@@ -1,32 +1,65 @@
 <template>
   <div class="login-container">
     <el-button type="primary" @click="dialogVisible = true">注册</el-button>
-    
+
     <el-dialog
       v-model="dialogVisible"
-      title="用户注册"
       center
       append-to-body
       :close-on-click-modal="false"
       :close-on-press-escape="false"
+      :show-close="false"
+      width="420px"
+      class="auth-dialog"
     >
+      <!-- 顶部渐变色带 -->
+      <div class="dialog-gradient-bar"></div>
+
+      <!-- 装饰区域：标题 + 副标题 -->
+      <div class="dialog-header">
+        <h2 class="dialog-title">加入我们</h2>
+        <p class="dialog-subtitle">注册账号，开始你的 MC 之旅</p>
+      </div>
+
       <el-form :model="loginForm" :rules="rules" ref="loginFormRef" label-width="0px">
-        <el-form-item placeholder="用户名" prop="username">
-          <el-input v-model="loginForm.username" placeholder="请输入用户名" />
+        <el-form-item prop="email">
+          <el-input v-model="loginForm.email" placeholder="请输入邮箱" :prefix-icon="Message" size="large" />
         </el-form-item>
-        <el-form-item placeholder="邮箱" prop="email">
-          <el-input v-model="loginForm.email" placeholder="请输入邮箱" />
+        <el-form-item prop="code">
+          <div class="code-input-row">
+            <el-input v-model="loginForm.code" placeholder="请输入验证码" :prefix-icon="Key" size="large" />
+            <el-button
+              type="primary"
+              :disabled="countdown > 0"
+              :loading="sendingCode"
+              @click="handleSendCode"
+              class="code-btn"
+            >
+              {{ countdown > 0 ? `${countdown}s` : '获取验证码' }}
+            </el-button>
+          </div>
         </el-form-item>
-        <el-form-item placeholder="密码" prop="password">
-          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" show-password />
+        <el-form-item prop="username">
+          <el-input v-model="loginForm.username" placeholder="请输入用户名" :prefix-icon="User" size="large" />
         </el-form-item>
-        <el-form-item placeholder="确认密码" prop="confirmPassword">
-          <el-input v-model="loginForm.confirmPassword" type="password" placeholder="请确认密码" show-password />
+        <el-form-item prop="password">
+          <el-input v-model="loginForm.password" type="password" placeholder="请输入密码" :prefix-icon="Lock" show-password size="large" />
+        </el-form-item>
+        <el-form-item prop="confirmPassword">
+          <el-input v-model="loginForm.confirmPassword" type="password" placeholder="请确认密码" :prefix-icon="Lock" show-password size="large" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleLogin" :loading="loading" style="width: 100%">注册</el-button>
+          <el-button type="primary" @click="handleLogin" :loading="loading" class="submit-btn">注册</el-button>
         </el-form-item>
       </el-form>
+
+      <!-- 底部切换链接 -->
+      <div class="dialog-footer-link">
+        已有账号？<a @click="switchToLogin">去登录</a>
+      </div>
+
+      <!-- 关闭按钮 -->
+      <button class="dialog-close-btn" @click="dialogVisible = false">&times;</button>
     </el-dialog>
   </div>
 </template>
@@ -35,26 +68,36 @@
 import { ref, reactive, defineExpose } from 'vue'
 import { useUserStore } from '../stores/user'
 import { ElMessage } from 'element-plus'
+import { User, Lock, Message, Key } from '@element-plus/icons-vue'
+import { sendRegisterCodeApi } from '../api/auth'
 
 const userStore = useUserStore()
 const dialogVisible = ref(false)
 const loading = ref(false)
+const sendingCode = ref(false)
+const countdown = ref(0)
 const loginFormRef = ref(null)
+let countdownTimer = null
 
 const loginForm = reactive({
   username: '',
   email: '',
+  code: '',
   password: '',
   confirmPassword: '',
   remember: false
 })
 
 const rules = {
+  email: [
+    { required: true, message: '请输入邮箱', trigger: 'blur' },
+    { type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur' }
+  ],
+  code: [
+    { required: true, message: '请输入验证码', trigger: 'blur' }
+  ],
   username: [
     { required: true, message: '请输入用户名', trigger: 'blur' }
-  ],
-  email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' }
   ],
   password: [
     { required: true, message: '请输入密码', trigger: 'blur' }
@@ -71,6 +114,35 @@ const rules = {
   ]
 }
 
+const startCountdown = () => {
+  countdown.value = 60
+  countdownTimer = setInterval(() => {
+    countdown.value--
+    if (countdown.value <= 0) {
+      clearInterval(countdownTimer)
+      countdownTimer = null
+    }
+  }, 1000)
+}
+
+const handleSendCode = async () => {
+  if (!loginForm.email) {
+    ElMessage.warning('请先输入邮箱')
+    return
+  }
+
+  try {
+    sendingCode.value = true
+    await sendRegisterCodeApi(loginForm.email)
+    ElMessage.success('验证码已发送')
+    startCountdown()
+  } catch (error) {
+    console.error('发送验证码失败:', error)
+  } finally {
+    sendingCode.value = false
+  }
+}
+
 const handleLogin = async () => {
   if (!loginFormRef.value) return
 
@@ -78,14 +150,13 @@ const handleLogin = async () => {
     await loginFormRef.value.validate()
     loading.value = true
 
-    // 调用 Pinia store 的 register 方法
-    await userStore.register(loginForm.username, loginForm.email, loginForm.password)
+    await userStore.register(loginForm.username, loginForm.email, loginForm.password, loginForm.code)
     ElMessage.success('注册成功')
     dialogVisible.value = false
 
-    // 清空表单
     loginForm.username = ''
     loginForm.email = ''
+    loginForm.code = ''
     loginForm.password = ''
     loginForm.confirmPassword = ''
   } catch (error) {
@@ -93,6 +164,11 @@ const handleLogin = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const switchToLogin = () => {
+  dialogVisible.value = false
+  window.dispatchEvent(new CustomEvent('open-login'))
 }
 
 const openDialog = () => {
@@ -112,34 +188,17 @@ defineExpose({
     min-height: 100vh;
 }
 
-/* 桌面端登录按钮样式 */
-.login-container > .el-button--primary {
-    --el-button-bg-color: transparent;
-    --el-button-border-color: transparent;
-    --el-button-hover-bg-color: rgba(255, 255, 255, 0.1);
-    --el-button-hover-border-color: transparent;
-    --el-button-active-bg-color: transparent;
-    --el-button-active-border-color: transparent;
-    /* padding: 0 30px; */
-    font-size: 16px !important;
-    font-weight: 400 !important;
-    border-radius: 0;
-    height: 3rem;
-    width: 4rem;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 /* 桌面端注册按钮样式 */
 .login-container > .el-button {
     --el-button-bg-color: transparent;
     --el-button-border-color: transparent;
     --el-button-hover-bg-color: rgba(255, 255, 255, 0.1);
     --el-button-hover-border-color: transparent;
+    --el-button-active-bg-color: transparent;
+    --el-button-active-border-color: transparent;
     padding: 0 30px;
-    font-size: 20px;
+    font-size: 16px !important;
+    font-weight: 400 !important;
     border-radius: 0;
     height: 4rem;
     width: 3rem;
@@ -147,5 +206,109 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+/* ---- Dialog 内部样式 ---- */
+
+.dialog-gradient-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover), #c084fc);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.dialog-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.dialog-title {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0 0 6px;
+}
+
+.dialog-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* 登录表单样式 */
+:deep(.el-form-item) {
+  margin-bottom: 24px;
+}
+
+:deep(.el-input__wrapper) {
+  /* background-color: var(--glass-bg); */
+  height: 42px;
+}
+
+:deep(.el-input__inner) {
+  background-color: transparent !important;
+}
+
+/* 验证码输入行 */
+.code-input-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.code-input-row .el-input {
+  flex: 1;
+}
+
+.code-btn {
+  width: 120px;
+  height: 44px;
+  flex-shrink: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 42px;
+  font-size: 15px;
+  border-radius: var(--radius-md);
+}
+
+.dialog-footer-link {
+  text-align: center;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.dialog-footer-link a {
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dialog-footer-link a:hover {
+  text-decoration: underline;
+}
+
+.dialog-close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.dialog-close-btn:hover {
+  color: var(--color-text);
 }
 </style>

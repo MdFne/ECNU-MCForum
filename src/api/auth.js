@@ -26,3 +26,18 @@ import axios from 'axios'
 export const refreshTokenApi = (refreshToken) => {
   return axios.post('http://localhost:3000/api/auth/refresh', { refreshToken })
 }
+
+// 发送重置密码验证码
+export const sendResetCodeApi = (email) => {
+  return request.post('/auth/send-reset-code', { email })
+}
+
+// 发送注册验证码
+export const sendRegisterCodeApi = (email) => {
+  return request.post('/auth/send-register-code', { email })
+}
+
+// 重置密码
+export const resetPasswordApi = (data) => {
+  return request.post('/auth/reset-password', data)
+}

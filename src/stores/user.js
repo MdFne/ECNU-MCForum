@@ -54,8 +54,8 @@ export const useUserStore = defineStore('user', {
     },
 
     // 注册
-    async register(username, email, password) {
-      const response = await registerApi({ username, email, password, confirmPassword: password })
+    async register(username, email, password, code) {
+      const response = await registerApi({ username, email, password, confirmPassword: password, code })
       const { user, token, refreshToken } = response.data.data
 
       this.isLoggedIn = true
