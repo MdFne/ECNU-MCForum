@@ -65,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, defineExpose } from 'vue'
+import { ref, reactive, defineExpose, onUnmounted } from 'vue'
 import { useUserStore } from '../stores/user'
 import { ElMessage } from 'element-plus'
 import { User, Lock, Message, Key } from '@element-plus/icons-vue'
@@ -114,13 +114,21 @@ const rules = {
   ]
 }
 
+const clearCountdown = () => {
+  if (countdownTimer) {
+    clearInterval(countdownTimer)
+    countdownTimer = null
+  }
+  countdown.value = 0
+}
+
 const startCountdown = () => {
+  clearCountdown()
   countdown.value = 60
   countdownTimer = setInterval(() => {
     countdown.value--
     if (countdown.value <= 0) {
-      clearInterval(countdownTimer)
-      countdownTimer = null
+      clearCountdown()
     }
   }, 1000)
 }
@@ -178,6 +186,10 @@ const openDialog = () => {
 defineExpose({
   openDialog
 })
+
+onUnmounted(() => {
+  clearCountdown()
+})
 </script>
 
 <style scoped>
@@ -206,109 +218,5 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-/* ---- Dialog 内部样式 ---- */
-
-.dialog-gradient-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-hover), #c084fc);
-  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-}
-
-.dialog-header {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.dialog-title {
-  font-size: 22px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin: 0 0 6px;
-}
-
-.dialog-subtitle {
-  font-size: 14px;
-  color: var(--color-text-secondary);
-  margin: 0;
-}
-
-/* 登录表单样式 */
-:deep(.el-form-item) {
-  margin-bottom: 24px;
-}
-
-:deep(.el-input__wrapper) {
-  /* background-color: var(--glass-bg); */
-  height: 42px;
-}
-
-:deep(.el-input__inner) {
-  background-color: transparent !important;
-}
-
-/* 验证码输入行 */
-.code-input-row {
-  display: flex;
-  gap: 10px;
-  width: 100%;
-}
-
-.code-input-row .el-input {
-  flex: 1;
-}
-
-.code-btn {
-  width: 120px;
-  height: 44px;
-  flex-shrink: 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.submit-btn {
-  width: 100%;
-  height: 42px;
-  font-size: 15px;
-  border-radius: var(--radius-md);
-}
-
-.dialog-footer-link {
-  text-align: center;
-  font-size: 13px;
-  color: var(--color-text-secondary);
-}
-
-.dialog-footer-link a {
-  color: var(--color-primary);
-  cursor: pointer;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.dialog-footer-link a:hover {
-  text-decoration: underline;
-}
-
-.dialog-close-btn {
-  position: absolute;
-  top: 12px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 22px;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  line-height: 1;
-  transition: color 0.2s;
-}
-
-.dialog-close-btn:hover {
-  color: var(--color-text);
 }
 </style>
