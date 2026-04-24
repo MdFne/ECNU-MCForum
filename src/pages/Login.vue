@@ -160,7 +160,7 @@ defineExpose({ openDialog })
 
 <style>
 /* 全局样式：Dialog 毛玻璃 + 圆角 */
-.auth-dialog .el-dialog {
+/* .auth-dialog.el-dialog {
   background: var(--glass-bg);
   backdrop-filter: blur(var(--glass-blur));
   -webkit-backdrop-filter: blur(var(--glass-blur));
@@ -169,7 +169,7 @@ defineExpose({ openDialog })
   overflow: hidden;
   position: relative;
   padding-top: 20px;
-}
+} */
 
 .auth-dialog .el-dialog__header {
   display: none;

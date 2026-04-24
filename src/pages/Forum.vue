@@ -302,7 +302,7 @@ onUnmounted(() => {
     flex-direction: column;
     height: 85vh;
     width: 80%;
-    background-color: var(--color-bg-white);
+    /* background-color: var(--color-bg-white); */
     border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
   }
 
