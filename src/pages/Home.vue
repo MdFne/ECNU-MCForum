@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import Activity from '../components/Activity.vue'
 import AppSideBarr from '../components/AppSideBarr.vue'
 import PostCard from '../components/PostCard.vue'
+import SakuraPetals from '../components/SakuraPetals.vue'
 import { getPostcards } from '../api/postcard'
 import { ElMessage } from 'element-plus'
 
@@ -91,8 +92,9 @@ onUnmounted(() => {
 <template>
   <div class="bg-content">
     <div class="bg-image"></div>
+    <SakuraPetals />
     <div class="main">
-    <Activity />
+      <Activity />
       <div class="container">
         <div class="content glass">
           <PostCard

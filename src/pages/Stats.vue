@@ -1,6 +1,7 @@
 <template>
   <div class="bg-content">
     <div class="bg-image"></div>
+    <SakuraPetals />
     <div class="stats-container">
       <div class="stats-header">
         <img 
@@ -93,6 +94,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
+import SakuraPetals from '../components/SakuraPetals.vue'
 import { handleServerClick } from '../utils/serverUtils'
 import { formatServersList, createOfflineServerData, createOnlineServerData } from '../utils/serverFormatter'
 
@@ -326,6 +328,7 @@ onUnmounted(() => {
     margin: 0;
     padding: 20px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    z-index: 1;
   }
 
   .stats-header {

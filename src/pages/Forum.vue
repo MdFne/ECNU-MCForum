@@ -1,6 +1,7 @@
 <template>
   <div class="bg-content">
     <div class="bg-image"></div>
+    <SakuraPetals />
     <div class="forum-container">
       <div class="channels-sidebar">
         <h2>频道</h2>
@@ -97,6 +98,7 @@
 import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import Channel from '../components/channel.vue'
+import SakuraPetals from '../components/SakuraPetals.vue'
 import { useForumStore } from '../stores/forum'
 import { useUserStore } from '../stores/user'
 import { ElMessage } from 'element-plus'
@@ -250,6 +252,7 @@ onUnmounted(() => {
     max-width: 1200px;
     margin: 0 auto;
     width: 95%;
+    z-index: 1;
     border-radius: var(--radius-lg);
   }
 
