@@ -6,6 +6,9 @@ import PostCard from '../components/PostCard.vue'
 import SakuraPetals from '../components/SakuraPetals.vue'
 import { getPostcards } from '../api/postcard'
 import { ElMessage } from 'element-plus'
+import { useSettingsStore } from '../stores/settings'
+
+const settingsStore = useSettingsStore()
 
 const activities = ref([])
 const loading = ref(false)
@@ -92,7 +95,7 @@ onUnmounted(() => {
 <template>
   <div class="bg-content">
     <div class="bg-image"></div>
-    <SakuraPetals />
+    <SakuraPetals v-if="settingsStore.sakuraEnabled" />
     <div class="main">
       <Activity />
       <div class="container">
@@ -163,6 +166,11 @@ onUnmounted(() => {
   .bg-image {
     background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
           url('../assets/ECNUSakura/3.png') center/cover no-repeat;
+  }
+
+  html.dark .bg-image {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('../assets/ECNUSakura/3_night.jpg') center/cover no-repeat;
   }
 
   @media(max-width: 768px) {

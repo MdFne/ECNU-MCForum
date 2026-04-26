@@ -9,7 +9,7 @@
       </div>
       <div class="link">
         <h2>皮肤站</h2>
-        <a href="https://skin.ecnumc.cn" target="_blank">
+        <a href="https://skin.ecnumc.cn" class="skin-site" target="_blank">
           https://skin.ecnumc.cn
           <img :src="outLinkIcon" style="width: 20px;" alt="outLinkIcon" class="outLinkIcon" />
         </a>
@@ -26,9 +26,9 @@
 
 <script setup>
   import { ref } from 'vue'
-import AutoCollapse from './AutoCollapse.vue'
-import ActivityTrailer from './ActivityTrailer.vue'
-import biliIcon from '../assets/linkIcon/bilibili.png'
+  import AutoCollapse from './AutoCollapse.vue'
+  import ActivityTrailer from './ActivityTrailer.vue'
+  import biliIcon from '../assets/linkIcon/bilibili.png'
   import qqIcon from '../assets/linkIcon/qq.png'
   import outLinkIcon from '../assets/linkIcon/outLink.png'
 
@@ -52,7 +52,7 @@ import biliIcon from '../assets/linkIcon/bilibili.png'
   .sidebar-bar {
     height: 40rem;
     width: 18rem;
-    background-color: #f5f5f5;
+    background-color: var(--color-bg-white);
     box-shadow: var(--el-box-shadow-light);
 
     /* position: fixed;
@@ -127,7 +127,8 @@ import biliIcon from '../assets/linkIcon/bilibili.png'
     display: none; /* Chrome/Safari */
   }
 
-  .link a {
+  .link a.skin-site {
+    color: var(--color-primary);
     display: flex;
     flex-direction: row;
     align-items: center;

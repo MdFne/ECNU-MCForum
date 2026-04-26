@@ -600,6 +600,11 @@ onUnmounted(() => {
           url('../assets/ECNUSakura/4.png') center/cover no-repeat;
   }
 
+  html.dark .bg-image {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('../assets/ECNUSakura/4_night.png') center/cover no-repeat;
+  }
+
   /* 弹窗样式 */
   .modal {
     position: fixed;

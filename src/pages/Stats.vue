@@ -1,7 +1,7 @@
 <template>
   <div class="bg-content">
     <div class="bg-image"></div>
-    <SakuraPetals />
+    <SakuraPetals v-if="settingsStore.sakuraEnabled" />
     <div class="stats-container">
       <div class="stats-header">
         <img 
@@ -95,7 +95,10 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import SakuraPetals from '../components/SakuraPetals.vue'
+import { useSettingsStore } from '../stores/settings'
 import { handleServerClick } from '../utils/serverUtils'
+
+const settingsStore = useSettingsStore()
 import { formatServersList, createOfflineServerData, createOnlineServerData } from '../utils/serverFormatter'
 
 const API_BASE = 'http://localhost:3000/api'
@@ -135,6 +138,7 @@ async function getServerRealTimeStats(serverId) {
     const response = await fetch(`${API_BASE}/stats/servers/${serverId}/realtime`);
     
     if (!response.ok) {
+      ElMessage.error('获取服务器实时状态失败');
       servers.value = servers.value.map(server => {
         if (server.id === serverId) {
           return createOfflineServerData(serverId, server);
@@ -146,6 +150,7 @@ async function getServerRealTimeStats(serverId) {
     
     const data = await response.json();
     if (data.success) {
+      ElMessage.success('获取服务器实时状态成功');
       servers.value = servers.value.map(server => {
         if (server.id === serverId) {
           return createOnlineServerData(serverId, server, data.data);
@@ -320,6 +325,11 @@ onUnmounted(() => {
   .bg-image {
     background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
           url('../assets/ECNUSakura/5.png') center/cover no-repeat;
+  }
+
+  html.dark .bg-image {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('../assets/ECNUSakura/5_night.png') center/cover no-repeat;
   }
 
   .stats-container {
@@ -520,8 +530,8 @@ onUnmounted(() => {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background-color: #fff;
-    border: 1px solid #e4e4e4;
+    background-color: var(--color-bg-white);
+    border: 1px solid var(--color-border);
     box-shadow: var(--shadow-sm);
     cursor: pointer;
 

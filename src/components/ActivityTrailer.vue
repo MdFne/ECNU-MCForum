@@ -91,7 +91,7 @@ onMounted(() => {
     align-items: center;
     gap: 12px;
     padding: 0 4px 0 0;
-    background-color: #fff;
+    background-color: var(--color-bg-light);
     border-radius: 6px;
     transition: all 0.3s ease;
     border-left: 4px solid #409eff;
@@ -107,7 +107,7 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     min-width: 50px;
-    background-color: #f0f7ff;
+    background-color: var(--color-trailer-bg);
     padding: 4px;
     border-radius: 4px;
     color: #409eff;
@@ -130,7 +130,7 @@ onMounted(() => {
 
   .title {
     font-size: 14px;
-    color: #333;
+    color: var(--color-text);
     text-decoration: none;
     display: -webkit-box;
     -webkit-line-clamp: 2;

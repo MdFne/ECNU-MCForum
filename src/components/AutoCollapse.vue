@@ -36,36 +36,36 @@
     },
     detailBGC: {
         type: String,
-        default: '#eee'
+        default: 'var(--color-bg-light)'
     },
     triggerBGC: {
         type: String,
-        default: '#e8e8e8'
+        default: 'var(--color-bg-light)'
     },
     triggerHover: {
         type: String,
-        default: '#e8e8e8'
+        default: 'var(--color-bg-light)'
     }
     })
 </script>
 
 <style scoped>
     .sidebar-item {
-    width: 100%;
-    background: v-bind('items.detailBGC');
-    border-radius: 8px;
-    overflow: hidden;
-    /* margin-bottom: 8px; */
+        width: 100%;
+        background: v-bind('items.detailBGC');
+        border-radius: 8px;
+        overflow: hidden;
+        /* margin-bottom: 8px; */
     }
 
     .trigger {
-    padding: 12px;
-    cursor: pointer;
-    background: v-bind('items.triggerBGC');
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 16px;
+        padding: 12px;
+        cursor: pointer;
+        background: v-bind('items.triggerBGC');
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
     }
 
     .trigger:hover {
@@ -74,14 +74,14 @@
     }
 
     .trigger img {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
     }
 
     .trigger a {
-    color: #545454;
-    text-decoration: none;
+        color: var(--color-text);
+        text-decoration: none;
     }
 
     .detail {
@@ -95,7 +95,7 @@
     .detail p {
         margin: 0;
         font-size: 14px;
-        color: #545454;
+        color: var(--color-text-secondary);
         /* 强制长文本/URL自动换行 */
         word-break: break-all;
         white-space: pre-wrap; /* 保留\n换行符，同时自动换行 */
@@ -103,9 +103,9 @@
     }
 
     .sidebar-item:hover .detail {
-    max-height: 120px;
-    opacity: 1;
-    padding-top: 8px;
-    padding-bottom: 12px;
+        max-height: 120px;
+        opacity: 1;
+        padding-top: 8px;
+        padding-bottom: 12px;
     }
 </style>

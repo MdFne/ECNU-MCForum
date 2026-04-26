@@ -1,7 +1,7 @@
 <template>
   <div class="bg-content">
     <div class="bg-image"></div>
-    <SakuraPetals />
+    <SakuraPetals v-if="settingsStore.sakuraEnabled" />
     <div class="forum-container">
       <div class="channels-sidebar">
         <h2>频道</h2>
@@ -99,12 +99,14 @@ import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import Channel from '../components/channel.vue'
 import SakuraPetals from '../components/SakuraPetals.vue'
+import { useSettingsStore } from '../stores/settings'
 import { useForumStore } from '../stores/forum'
 import { useUserStore } from '../stores/user'
 import { ElMessage } from 'element-plus'
 import defaultAvatar from '../assets/avatar.webp'
 
 const route = useRoute()
+const settingsStore = useSettingsStore()
 const forumStore = useForumStore()
 const userStore = useUserStore()
 
@@ -245,6 +247,11 @@ onUnmounted(() => {
           url('../assets/ECNUSakura/2.png') center/cover no-repeat;
   }
 
+  html.dark .bg-image {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+          url('../assets/ECNUSakura/2_night.png') center/cover no-repeat;
+  }
+
   /* ---- 论坛容器布局 ---- */
   .forum-container {
     display: flex;
@@ -260,7 +267,7 @@ onUnmounted(() => {
     width: 20%;
     background-color: var(--color-bg-light);
     border-right: 1px solid var(--color-border);
-    padding: 20px;
+    padding: 16px 20px;
     overflow-y: auto;
     border-radius: var(--radius-lg) 0 0 var(--radius-lg);
   }
@@ -313,7 +320,7 @@ onUnmounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px;
+    padding: 10px 16px;
     background-color: var(--color-primary);
     color: white;
     border-radius: 0 var(--radius-lg) 0 0;
@@ -361,7 +368,7 @@ onUnmounted(() => {
   .message {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     padding: 12px;
     /* background-color: var(--color-bg-light); */
     border-radius: var(--radius-md);
