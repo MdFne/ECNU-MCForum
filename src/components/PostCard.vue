@@ -106,7 +106,6 @@ export default {
 
 .card-image {
   width: 100%;
-  height: 160px;
   overflow: hidden;
 }
 

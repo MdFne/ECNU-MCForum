@@ -8,6 +8,7 @@ import { getPostcards, getPostcardTags } from '../api/postcard'
 import { ElMessage } from 'element-plus'
 import { useSettingsStore } from '../stores/settings'
 import { Search } from '@element-plus/icons-vue'
+import { MasonryWall } from '@yeger/vue-masonry-wall'
 
 const settingsStore = useSettingsStore()
 
@@ -177,18 +178,27 @@ onUnmounted(() => {
             </el-select>
           </div>
           <div class="content glass">
-            <PostCard
-              v-for="activity in activities"
-              :key="activity._id"
-              :id="activity._id"
-              :title="activity.title"
-              :summary="activity.summary"
-              :coverImage="activity.coverImage"
-              :publishDate="activity.publishDate"
-              :author="activity.author"
-              :views="activity.views"
-              :tags="activity.tags"
-            />
+            <MasonryWall
+              :items="activities"
+              :column-width="220"
+              :gap="20"
+              :min-columns="1"
+              :max-columns="4"
+            >
+              <template #default="{ item }">
+                <PostCard
+                  :key="item._id"
+                  :id="item._id"
+                  :title="item.title"
+                  :summary="item.summary"
+                  :coverImage="item.coverImage"
+                  :publishDate="item.publishDate"
+                  :author="item.author"
+                  :views="item.views"
+                  :tags="item.tags"
+                />
+              </template>
+            </MasonryWall>
 
             <!-- 加载指示器 -->
             <div v-if="loading" class="loading-container">
@@ -266,9 +276,6 @@ onUnmounted(() => {
     height: auto;
 
     flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
     padding: 20px;
 
     /* background-color: var(--color-bg-lighter); */
