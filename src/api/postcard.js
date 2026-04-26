@@ -27,3 +27,11 @@ export const getPostcards = (params = {}) => {
 export const getPostcardById = (id) => {
     return axios.get(`${API_BASE}/postcard/${id}`)
 }
+
+/**
+ * 获取所有不重复标签
+ * @returns {Promise}
+ */
+export const getPostcardTags = () => {
+    return axios.get(`${API_BASE}/postcard/tags`)
+}
