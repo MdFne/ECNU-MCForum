@@ -51,6 +51,9 @@
 
         <!-- 文章正文 -->
         <div class="article-content" v-html="article.content"></div>
+
+        <!-- 评论区 -->
+        <CommentSection v-if="article" :postcardId="article._id" />
       </article>
     </div>
   </div>
@@ -61,6 +64,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getPostcardById } from '../api/postcard'
 import { User, Calendar, View } from '@element-plus/icons-vue'
+import CommentSection from '../components/CommentSection.vue'
 
 const route = useRoute()
 const router = useRouter()
